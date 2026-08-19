@@ -370,11 +370,26 @@ function updateChart() {
           borderWidth: 1,
           titleColor: '#181818',
           bodyColor: '#6B6B6B',
+          footerColor: '#9B9B9B',
           titleFont: { family: 'Inter', size: 12, weight: '600' },
           bodyFont: { family: 'Inter', size: 11 },
-          padding: 10,
+          footerFont: { family: 'Inter', size: 11 },
+          padding: 12,
           callbacks: {
-            label: ctx => ' ' + ctx.dataset.label + ': ' + FMT_FULL(ctx.raw)
+            label: ctx => '  ' + ctx.dataset.label + ':  ' + FMT_FULL(ctx.raw),
+            afterBody: items => {
+              if (activeTab === 'quarterly') return [];
+              const hoveredLabel = items[0].label;
+              const key = activeTab === 'ou' ? 'ou' : activeTab === 'cloud' ? 'cloud' : 'bucket';
+              const breakdownKey = activeTab === 'ou' ? 'cloud' : activeTab === 'cloud' ? 'ou' : 'ou';
+              const subset = data.filter(d => d[key] === hoveredLabel);
+              const breakdown = groupBy(subset, breakdownKey, cy).slice(0, 6);
+              if (!breakdown.length) return [];
+              const lines = ['', '  ' + breakdownKey.charAt(0).toUpperCase() + breakdownKey.slice(1) + ' breakdown:'];
+              breakdown.forEach(([name, val]) => lines.push('  · ' + name + ':  ' + FMT_FULL(val)));
+              return lines;
+            },
+            afterFooter: () => []
           }
         }
       },
