@@ -1,902 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paid Media Budget Planning — FY28</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paid Media Budget Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:#fff;color:#181818;font-size:13px;line-height:1.5}
 
-    :root {
-      --navy: #032D60;
-      --blue: #0176D3;
-      --blue-light: #C9E0F5;
-      --blue-pale: #EAF3FB;
-      --bg: #F5F5F5;
-      --surface: #FFFFFF;
-      --border: #E0E0E0;
-      --text: #181818;
-      --text-secondary: #747474;
-      --text-muted: #AAAAAA;
-      --green: #1A7F37;
-      --red: #CF222E;
-      --sidebar-w: 240px;
-    }
+/* ── Header ── */
+header{background:#032D60;height:60px;display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:100}
+.header-title{flex:1}
+.header-title h1{font-size:15px;font-weight:600;color:#fff;letter-spacing:-0.2px}
+.header-title p{font-size:11px;color:rgba(255,255,255,0.55);margin-top:1px}
+.year-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:0.03em}
 
-    body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      font-size: 13px;
-    }
+/* ── Filter bar ── */
+.filter-bar{background:#F7F7F7;border-bottom:1px solid #E5E5E5;padding:10px 32px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:60px;z-index:99}
+.filter-label{font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:0.08em;margin-right:4px}
+.filter-btn{background:#fff;border:1px solid #E5E5E5;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:500;color:#181818;cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color .15s}
+.filter-btn:hover{border-color:#0176D3;color:#0176D3}
+.filter-btn .arrow{font-size:9px;color:#9B9B9B;transition:transform .15s}
+.filter-btn.open .arrow{transform:rotate(180deg)}
+.filter-sep{width:1px;height:18px;background:#E5E5E5;margin:0 4px}
+.year-toggle{display:flex;border:1px solid #E5E5E5;border-radius:6px;overflow:hidden}
+.year-toggle button{padding:5px 14px;font-size:12px;font-weight:500;border:none;cursor:pointer;background:#fff;color:#6B6B6B;transition:all .15s}
+.year-toggle button.active{background:#032D60;color:#fff}
+.reset-link{margin-left:auto;font-size:11px;color:#0176D3;cursor:pointer;text-decoration:none;font-weight:500}
+.reset-link:hover{text-decoration:underline}
 
-    /* ── HEADER ── */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: var(--navy);
-      height: 60px;
-      display: flex;
-      align-items: center;
-      padding: 0 28px;
-      gap: 16px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-    }
-    .hdr-title { font-size: 16px; font-weight: 600; color: #fff; letter-spacing: -0.2px; }
-    .hdr-sub   { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; }
-    .hdr-spacer { flex: 1; }
-    .hdr-badge {
-      font-size: 10px; font-weight: 600;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.8);
-      padding: 4px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
+/* ── Dropdown panels ── */
+.dropdown-wrap{position:relative}
+.dropdown-panel{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid #E5E5E5;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.1);min-width:200px;max-height:320px;overflow-y:auto;z-index:200;display:none;padding:8px 0}
+.dropdown-panel.open{display:block}
+.dropdown-header{display:flex;justify-content:space-between;padding:6px 14px 8px;border-bottom:1px solid #F0F0F0;margin-bottom:4px}
+.dropdown-header span{font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:0.08em}
+.dropdown-header a{font-size:11px;color:#0176D3;cursor:pointer;text-decoration:none}
+.dropdown-header a:hover{text-decoration:underline}
+.dropdown-item{display:flex;align-items:center;gap:8px;padding:6px 14px;cursor:pointer;transition:background .1s}
+.dropdown-item:hover{background:#F7F7F7}
+.dropdown-item input[type=checkbox]{accent-color:#032D60;width:13px;height:13px;cursor:pointer}
+.dropdown-item label{font-size:12px;color:#181818;cursor:pointer;flex:1}
 
-    /* ── LAYOUT ── */
-    .layout {
-      display: flex;
-      min-height: calc(100vh - 60px);
-    }
+/* ── Main content ── */
+main{padding:28px 32px;max-width:1400px;margin:0 auto}
 
-    /* ── SIDEBAR ── */
-    aside {
-      width: var(--sidebar-w);
-      flex-shrink: 0;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 20px 16px;
-      overflow-y: auto;
-      position: sticky;
-      top: 60px;
-      height: calc(100vh - 60px);
-    }
+/* ── KPI cards ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.kpi-card{background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:24px;min-height:110px;display:flex;flex-direction:column;justify-content:space-between}
+.kpi-card-label{font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px}
+.kpi-card-value{font-size:32px;font-weight:700;color:#181818;letter-spacing:-0.5px;line-height:1}
+.kpi-card-sub{font-size:12px;color:#6B6B6B;margin-top:6px}
+.delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:6px}
+.delta.pos{color:#1A7F37;background:#DAFBE1}
+.delta.neg{color:#CF222E;background:#FFEBE9}
+.delta.neutral{color:#6B6B6B;background:#F0F0F0}
 
-    .filter-section { margin-bottom: 20px; }
-    .filter-label {
-      font-size: 9px; font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      display: block;
-    }
+/* ── Section header ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.section-title{font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:0.1em}
 
-    .filter-search {
-      width: 100%;
-      padding: 6px 10px;
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      font-size: 12px;
-      font-family: inherit;
-      margin-bottom: 6px;
-      outline: none;
-      color: var(--text);
-    }
-    .filter-search:focus { border-color: var(--blue); }
+/* ── Chart tabs ── */
+.chart-tabs{display:flex;gap:4px;background:#F3F3F3;border-radius:8px;padding:3px;width:fit-content}
+.chart-tab{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:500;color:#6B6B6B;cursor:pointer;border:none;background:transparent;transition:all .15s}
+.chart-tab.active{background:#032D60;color:#fff;font-weight:600}
+.chart-tab:hover:not(.active){color:#181818;background:rgba(0,0,0,0.04)}
 
-    .checkbox-list {
-      max-height: 140px;
-      overflow-y: auto;
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 4px 0;
-    }
-    .checkbox-list::-webkit-scrollbar { width: 4px; }
-    .checkbox-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+/* ── Chart container ── */
+.chart-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:24px;margin-bottom:24px}
+.chart-inner{position:relative;height:320px}
 
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px;
-      cursor: pointer;
-      transition: background 0.1s;
-    }
-    .checkbox-item:hover { background: var(--blue-pale); }
-    .checkbox-item input[type="checkbox"] {
-      accent-color: var(--navy);
-      width: 13px; height: 13px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .checkbox-item label {
-      font-size: 12px; color: var(--text);
-      cursor: pointer; white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis;
-    }
+/* ── Table ── */
+.table-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#0176D3;cursor:pointer;margin-bottom:12px;background:none;border:none;padding:0}
+.table-toggle:hover{text-decoration:underline}
+.table-wrap{display:none;overflow-x:auto;border:1px solid #E5E5E5;border-radius:8px;margin-bottom:32px}
+.table-wrap.open{display:block}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:#F3F3F3}
+thead th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+tbody tr:nth-child(even){background:#FAFAFA}
+tbody tr:hover{background:#EAF4FF}
+tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
+.chg-pos{color:#1A7F37;font-weight:600}
+.chg-neg{color:#CF222E;font-weight:600}
+.chg-flat{color:#9B9B9B}
 
-    .select-all-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 5px;
-    }
-    .select-all-btn {
-      font-size: 10px; color: var(--blue);
-      background: none; border: none;
-      cursor: pointer; padding: 0;
-      font-weight: 600;
-    }
-    .select-all-btn:hover { text-decoration: underline; }
-
-    .filter-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 16px 0;
-    }
-
-    .year-toggle {
-      display: flex;
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      overflow: hidden;
-    }
-    .year-toggle button {
-      flex: 1;
-      padding: 7px 0;
-      font-size: 12px; font-weight: 500;
-      font-family: inherit;
-      border: none;
-      background: var(--surface);
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .year-toggle button.active {
-      background: var(--navy);
-      color: white;
-      font-weight: 600;
-    }
-
-    .apply-btn {
-      width: 100%;
-      padding: 9px;
-      background: var(--blue);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 12px; font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      margin-top: 16px;
-      transition: background 0.15s;
-    }
-    .apply-btn:hover { background: #014486; }
-
-    /* ── MAIN ── */
-    main {
-      flex: 1;
-      padding: 24px 28px;
-      overflow-x: hidden;
-    }
-
-    .page-title {
-      font-size: 10px; font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    /* ── KPI ROW ── */
-    .kpi-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .kpi-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 18px 20px;
-      height: 110px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .kpi-label {
-      font-size: 9px; font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-    .kpi-value {
-      font-size: 26px; font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.5px;
-      line-height: 1;
-    }
-    .kpi-delta {
-      font-size: 11px; font-weight: 500;
-      margin-top: 6px;
-    }
-    .kpi-delta.pos { color: var(--green); }
-    .kpi-delta.neg { color: var(--red); }
-    .kpi-delta.neutral { color: var(--text-muted); }
-
-    /* ── CHART SECTION ── */
-    .chart-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 20px 24px;
-      margin-bottom: 12px;
-    }
-
-    .chart-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .chart-title {
-      font-size: 12px; font-weight: 600;
-      color: var(--text);
-    }
-
-    /* ── TABS ── */
-    .tabs {
-      display: flex;
-      gap: 0;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
-    }
-    .tab-btn {
-      padding: 8px 18px;
-      font-size: 12px; font-weight: 500;
-      font-family: inherit;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.15s;
-      margin-bottom: -1px;
-    }
-    .tab-btn:hover { color: var(--navy); }
-    .tab-btn.active {
-      color: var(--navy);
-      font-weight: 600;
-      border-bottom-color: var(--navy);
-    }
-
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    /* ── LEGEND ── */
-    .legend {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-    .legend-dot {
-      width: 10px; height: 10px;
-      border-radius: 2px;
-    }
-
-    /* ── DATA TABLE ── */
-    .table-section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-top: 12px;
-      overflow: hidden;
-    }
-
-    .table-toggle {
-      width: 100%;
-      padding: 12px 20px;
-      background: none;
-      border: none;
-      font-family: inherit;
-      font-size: 12px; font-weight: 600;
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-align: left;
-    }
-    .table-toggle:hover { color: var(--navy); background: var(--blue-pale); }
-    .table-toggle .arrow { transition: transform 0.2s; }
-    .table-toggle.open .arrow { transform: rotate(90deg); }
-
-    .table-wrap {
-      display: none;
-      overflow-x: auto;
-      border-top: 1px solid var(--border);
-    }
-    .table-wrap.open { display: block; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-    thead th {
-      background: #FAFAFA;
-      padding: 10px 14px;
-      text-align: left;
-      font-size: 9px; font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    thead th.num { text-align: right; }
-    tbody td {
-      padding: 9px 14px;
-      border-bottom: 1px solid #F5F5F5;
-      color: var(--text);
-      white-space: nowrap;
-    }
-    tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
-    tbody tr:hover td { background: var(--blue-pale); }
-    tbody tr:last-child td { border-bottom: none; }
-
-    .badge-bucket {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 3px;
-      font-size: 10px; font-weight: 600;
-      background: var(--blue-pale);
-      color: var(--navy);
-    }
-
-    /* ── NO DATA ── */
-    .no-data {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--text-muted);
-      font-size: 13px;
-    }
-
-    /* ── FOOTER ── */
-    .footer {
-      margin-top: 24px;
-      padding-bottom: 32px;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-align: center;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .layout { flex-direction: column; }
-      aside { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--border); }
-      .kpi-row { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .kpi-row { grid-template-columns: 1fr 1fr; }
-      main { padding: 16px; }
-    }
-  </style>
+/* ── Responsive ── */
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .filter-bar{overflow-x:auto;flex-wrap:nowrap}
+  main{padding:20px 16px}
+  header{padding:0 16px}
+}
+@media(max-width:500px){
+  .kpi-grid{grid-template-columns:1fr}
+  .kpi-card-value{font-size:26px}
+}
+</style>
 </head>
 <body>
 
 <header>
-  <div>
-    <div class="hdr-title">Paid Media Budget Planning</div>
-    <div class="hdr-sub">Media Finance &nbsp;·&nbsp; FY Budget Analysis</div>
+  <div class="header-title">
+    <h1>Paid Media Budget Planning</h1>
+    <p>Media Finance &nbsp;·&nbsp; FY Budget Analysis</p>
   </div>
-  <div class="hdr-spacer"></div>
-  <div class="hdr-badge">FY27 Data</div>
+  <span class="year-badge" id="activeBadge">FY27 DATA</span>
 </header>
 
-<div class="layout">
+<div class="filter-bar">
+  <span class="filter-label">Filters</span>
 
-  <!-- SIDEBAR -->
-  <aside>
-
-    <div class="filter-section">
-      <span class="filter-label">Operating Unit</span>
-      <div class="select-all-row">
-        <button class="select-all-btn" onclick="selectAll('ou', true)">All</button>
-        <button class="select-all-btn" onclick="selectAll('ou', false)">None</button>
+  <div class="dropdown-wrap" id="ouWrap">
+    <button class="filter-btn" id="ouBtn" onclick="toggleDropdown('ou')">
+      <span id="ouLabel">OU: All</span><span class="arrow">▾</span>
+    </button>
+    <div class="dropdown-panel" id="ouPanel">
+      <div class="dropdown-header">
+        <span>Operating Unit</span>
+        <a onclick="selectAll('ou')">All</a>&nbsp;/&nbsp;<a onclick="selectNone('ou')">None</a>
       </div>
-      <div class="checkbox-list" id="ou-list"></div>
+      <div id="ouItems"></div>
     </div>
+  </div>
 
-    <div class="filter-section">
-      <span class="filter-label">Cloud</span>
-      <div class="select-all-row">
-        <button class="select-all-btn" onclick="selectAll('cloud', true)">All</button>
-        <button class="select-all-btn" onclick="selectAll('cloud', false)">None</button>
+  <div class="dropdown-wrap" id="cloudWrap">
+    <button class="filter-btn" id="cloudBtn" onclick="toggleDropdown('cloud')">
+      <span id="cloudLabel">Cloud: All</span><span class="arrow">▾</span>
+    </button>
+    <div class="dropdown-panel" id="cloudPanel">
+      <div class="dropdown-header">
+        <span>Cloud</span>
+        <a onclick="selectAll('cloud')">All</a>&nbsp;/&nbsp;<a onclick="selectNone('cloud')">None</a>
       </div>
-      <div class="checkbox-list" id="cloud-list"></div>
+      <div id="cloudItems"></div>
     </div>
+  </div>
 
-    <div class="filter-section">
-      <span class="filter-label">Bucket</span>
-      <div class="select-all-row">
-        <button class="select-all-btn" onclick="selectAll('bucket', true)">All</button>
-        <button class="select-all-btn" onclick="selectAll('bucket', false)">None</button>
+  <div class="dropdown-wrap" id="bucketWrap">
+    <button class="filter-btn" id="bucketBtn" onclick="toggleDropdown('bucket')">
+      <span id="bucketLabel">Bucket: All</span><span class="arrow">▾</span>
+    </button>
+    <div class="dropdown-panel" id="bucketPanel">
+      <div class="dropdown-header">
+        <span>Bucket</span>
+        <a onclick="selectAll('bucket')">All</a>&nbsp;/&nbsp;<a onclick="selectNone('bucket')">None</a>
       </div>
-      <div class="checkbox-list" id="bucket-list"></div>
+      <div id="bucketItems"></div>
     </div>
+  </div>
 
-    <hr class="filter-divider">
+  <div class="filter-sep"></div>
 
-    <div class="filter-section">
-      <span class="filter-label">View</span>
-      <div class="year-toggle">
-        <button class="active" id="btn-fy27" onclick="setYear('fy27')">FY27</button>
-        <button id="btn-fy26" onclick="setYear('fy26')">FY26</button>
-      </div>
-    </div>
+  <div class="year-toggle">
+    <button id="fy27btn" class="active" onclick="setYear('fy27')">FY27</button>
+    <button id="fy26btn" onclick="setYear('fy26')">FY26</button>
+  </div>
 
-    <button class="apply-btn" onclick="render()">Apply Filters</button>
-
-  </aside>
-
-  <!-- MAIN -->
-  <main>
-    <div class="page-title">Budget Overview</div>
-
-    <!-- KPI ROW -->
-    <div class="kpi-row">
-      <div class="kpi-card">
-        <div class="kpi-label" id="kpi-year-label">FY27 Total</div>
-        <div class="kpi-value" id="kpi-total">—</div>
-        <div class="kpi-delta neutral" id="kpi-vs"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">OUs Selected</div>
-        <div class="kpi-value" id="kpi-ous">—</div>
-        <div class="kpi-delta neutral" id="kpi-ous-sub"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Top OU by Spend</div>
-        <div class="kpi-value" id="kpi-top-ou" style="font-size:16px;line-height:1.2;">—</div>
-        <div class="kpi-delta neutral" id="kpi-top-ou-val"></div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Top Cloud by Spend</div>
-        <div class="kpi-value" id="kpi-top-cloud" style="font-size:16px;line-height:1.2;">—</div>
-        <div class="kpi-delta neutral" id="kpi-top-cloud-val"></div>
-      </div>
-    </div>
-
-    <!-- TABS -->
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('ou')">By OU</button>
-      <button class="tab-btn" onclick="switchTab('cloud')">By Cloud</button>
-      <button class="tab-btn" onclick="switchTab('bucket')">By Bucket</button>
-      <button class="tab-btn" onclick="switchTab('quarterly')">Quarterly</button>
-    </div>
-
-    <!-- BY OU -->
-    <div class="tab-panel active" id="tab-ou">
-      <div class="chart-card">
-        <div class="chart-header">
-          <span class="chart-title">Spend by Operating Unit</span>
-          <div class="legend">
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#032D60"></div> FY27
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#C9E0F5"></div> FY26
-            </div>
-          </div>
-        </div>
-        <canvas id="chart-ou" height="320"></canvas>
-      </div>
-    </div>
-
-    <!-- BY CLOUD -->
-    <div class="tab-panel" id="tab-cloud">
-      <div class="chart-card">
-        <div class="chart-header">
-          <span class="chart-title">Spend by Cloud</span>
-          <div class="legend">
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#032D60"></div> FY27
-            </div>
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#C9E0F5"></div> FY26
-            </div>
-          </div>
-        </div>
-        <canvas id="chart-cloud" height="280"></canvas>
-      </div>
-    </div>
-
-    <!-- BY BUCKET -->
-    <div class="tab-panel" id="tab-bucket">
-      <div class="chart-card">
-        <div class="chart-header">
-          <span class="chart-title">Spend by Bucket</span>
-        </div>
-        <div style="max-width:500px; margin:0 auto;">
-          <canvas id="chart-bucket" height="280"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- QUARTERLY -->
-    <div class="tab-panel" id="tab-quarterly">
-      <div class="chart-card">
-        <div class="chart-header">
-          <span class="chart-title">FY27 Quarterly Breakdown</span>
-        </div>
-        <canvas id="chart-quarterly" height="280"></canvas>
-      </div>
-    </div>
-
-    <!-- DATA TABLE -->
-    <div class="table-section">
-      <button class="table-toggle" id="table-toggle-btn" onclick="toggleTable()">
-        <span class="arrow">▶</span>
-        <span>View detailed data</span>
-        <span id="table-row-count" style="color:var(--text-muted); font-weight:400; margin-left:4px;"></span>
-      </button>
-      <div class="table-wrap" id="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Operating Unit</th>
-              <th>Cloud</th>
-              <th>Bucket</th>
-              <th class="num">FY27</th>
-              <th class="num">FY26</th>
-            </tr>
-          </thead>
-          <tbody id="table-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="footer">
-      Data sourced from Google Sheets · Paid Media Finance · Last updated: <span id="last-updated"></span>
-    </div>
-  </main>
+  <a class="reset-link" onclick="resetAll()">Reset all</a>
 </div>
 
+<main>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-card-label" id="kpi1label">FY27 Total Budget</div>
+      <div>
+        <div class="kpi-card-value" id="kpi1value">—</div>
+        <div class="kpi-card-sub" id="kpi1sub"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-label">YoY Change</div>
+      <div>
+        <div class="kpi-card-value" id="kpi2value">—</div>
+        <span class="delta neutral" id="kpi2delta">No prior data</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-label">Top OU by Spend</div>
+      <div>
+        <div class="kpi-card-value" id="kpi3value" style="font-size:22px;letter-spacing:-0.3px">—</div>
+        <div class="kpi-card-sub" id="kpi3sub"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-label">Top Cloud by Spend</div>
+      <div>
+        <div class="kpi-card-value" id="kpi4value" style="font-size:22px;letter-spacing:-0.3px">—</div>
+        <div class="kpi-card-sub" id="kpi4sub"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-title">Spend Breakdown</span>
+    <div class="chart-tabs">
+      <button class="chart-tab active" onclick="switchTab('ou',this)">By OU</button>
+      <button class="chart-tab" onclick="switchTab('cloud',this)">By Cloud</button>
+      <button class="chart-tab" onclick="switchTab('bucket',this)">By Bucket</button>
+      <button class="chart-tab" onclick="switchTab('quarterly',this)">Quarterly</button>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-inner">
+      <canvas id="mainChart"></canvas>
+    </div>
+  </div>
+
+  <button class="table-toggle" onclick="toggleTable(this)">
+    <span>▶</span> View data table
+  </button>
+  <div class="table-wrap" id="tableWrap">
+    <table>
+      <thead>
+        <tr>
+          <th>OU</th><th>Cloud</th><th>Bucket</th>
+          <th id="th-primary">FY27</th><th id="th-compare">FY26</th><th>Change %</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</main>
+
 <script>
-  // ── Globals ──
-  let allData = [];
-  let activeYear = 'fy27';
-  let activeTab = 'ou';
-  let charts = {};
-  const CHART_COLORS = { fy27: '#032D60', fy26: '#C9E0F5', fy27q: ['#032D60','#0176D3','#1B96FF','#51BEF5'] };
+let allData = [];
+let activeYear = 'fy27';
+let activeTab = 'ou';
+let filters = { ou: new Set(), cloud: new Set(), bucket: new Set() };
+let mainChart = null;
 
-  // ── Helpers ──
-  function fmt(v) {
-    if (v >= 1e6)  return '$' + (v/1e6).toFixed(1) + 'M';
-    if (v >= 1e3)  return '$' + Math.round(v/1e3) + 'K';
-    return '$' + Math.round(v).toLocaleString();
+const FMT = v => {
+  if (v >= 1e6) return '$' + (v/1e6).toFixed(1) + 'M';
+  if (v >= 1e3) return '$' + Math.round(v/1e3) + 'K';
+  return '$' + Math.round(v).toLocaleString();
+};
+const FMT_FULL = v => '$' + Math.round(v).toLocaleString();
+
+function getCompareYear() { return activeYear === 'fy27' ? 'fy26' : 'fy27'; }
+
+function getFiltered() {
+  return allData.filter(d =>
+    filters.ou.has(d.ou) &&
+    filters.cloud.has(d.cloud) &&
+    filters.bucket.has(d.bucket)
+  );
+}
+
+function groupBy(data, key, year) {
+  const map = {};
+  data.forEach(d => {
+    const k = d[key];
+    if (!map[k]) map[k] = 0;
+    map[k] += d[year] || 0;
+  });
+  return Object.entries(map).sort((a,b) => b[1]-a[1]);
+}
+
+// ── KPIs ──
+function updateKPIs() {
+  const data = getFiltered();
+  const cy = activeYear, py = getCompareYear();
+  const total = data.reduce((s,d) => s + (d[cy]||0), 0);
+  const prior = data.reduce((s,d) => s + (d[py]||0), 0);
+  const diff = total - prior;
+  const pct = prior > 0 ? ((diff/prior)*100) : null;
+
+  document.getElementById('kpi1label').textContent = cy.toUpperCase() + ' Total Budget';
+  document.getElementById('kpi1value').textContent = FMT(total);
+  document.getElementById('kpi1sub').textContent = '';
+
+  document.getElementById('kpi2value').textContent = prior > 0 ? FMT(Math.abs(diff)) : '—';
+  const d2 = document.getElementById('kpi2delta');
+  if (pct !== null) {
+    d2.textContent = (pct >= 0 ? '▲ ' : '▼ ') + Math.abs(pct).toFixed(1) + '% vs ' + py.toUpperCase();
+    d2.className = 'delta ' + (pct >= 0 ? 'pos' : 'neg');
+  } else {
+    d2.textContent = 'No prior data';
+    d2.className = 'delta neutral';
   }
-  function fmtFull(v) {
-    return '$' + Math.round(v).toLocaleString();
+
+  const ouTotals = groupBy(data, 'ou', cy);
+  const cloudTotals = groupBy(data, 'cloud', cy);
+  if (ouTotals.length) {
+    document.getElementById('kpi3value').textContent = ouTotals[0][0];
+    document.getElementById('kpi3sub').textContent = FMT(ouTotals[0][1]);
   }
-  function pct(a, b) {
-    if (!b) return null;
-    return ((a - b) / b * 100).toFixed(1);
+  if (cloudTotals.length) {
+    document.getElementById('kpi4value').textContent = cloudTotals[0][0];
+    document.getElementById('kpi4sub').textContent = FMT(cloudTotals[0][1]);
   }
-  function groupBy(arr, key, valKey) {
-    const map = {};
-    arr.forEach(r => {
-      const k = r[key] || 'Unknown';
-      map[k] = (map[k] || 0) + (r[valKey] || 0);
+}
+
+// ── Chart ──
+function updateChart() {
+  const data = getFiltered();
+  const cy = activeYear, py = getCompareYear();
+  let labels = [], cyVals = [], pyVals = [];
+
+  if (activeTab === 'quarterly') {
+    const quarters = ['Q1','Q2','Q3','Q4'];
+    const qKeys = [cy+'q1', cy+'q2', cy+'q3', cy+'q4'];
+    const pKeys = [py+'q1', py+'q2', py+'q3', py+'q4'];
+    labels = quarters;
+    cyVals = qKeys.map(k => data.reduce((s,d) => s+(d[k]||0), 0));
+    pyVals = pKeys.map(k => data.reduce((s,d) => s+(d[k]||0), 0));
+  } else {
+    const key = activeTab === 'ou' ? 'ou' : activeTab === 'cloud' ? 'cloud' : 'bucket';
+    const cyGroups = groupBy(data, key, cy);
+    const pyMap = {};
+    groupBy(data, key, py).forEach(([k,v]) => pyMap[k] = v);
+    const top = cyGroups.slice(0, 20);
+    labels = top.map(x => x[0]);
+    cyVals = top.map(x => x[1]);
+    pyVals = labels.map(l => pyMap[l] || 0);
+  }
+
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  if (mainChart) mainChart.destroy();
+
+  const hasPrior = pyVals.some(v => v > 0);
+  const datasets = [];
+  if (hasPrior) {
+    datasets.push({
+      label: py.toUpperCase(),
+      data: pyVals,
+      backgroundColor: '#C9E0F5',
+      borderRadius: 3,
+      borderSkipped: false,
     });
-    return map;
   }
-  function sortedEntries(obj) {
-    return Object.entries(obj).sort((a, b) => b[1] - a[1]);
-  }
+  datasets.push({
+    label: cy.toUpperCase(),
+    data: cyVals,
+    backgroundColor: '#0176D3',
+    borderRadius: 3,
+    borderSkipped: false,
+  });
 
-  // ── Filter state ──
-  let selected = { ou: new Set(), cloud: new Set(), bucket: new Set() };
+  const maxVal = Math.max(...cyVals, ...pyVals, 1);
 
-  function getFiltered() {
-    return allData.filter(r =>
-      selected.ou.has(r.ou) &&
-      selected.cloud.has(r.cloud) &&
-      selected.bucket.has(r.bucket)
-    );
-  }
-
-  // ── Build checkboxes ──
-  function buildCheckboxes(data) {
-    const ous     = [...new Set(data.map(r => r.ou))].filter(Boolean).sort();
-    const clouds  = [...new Set(data.map(r => r.cloud))].filter(Boolean).sort();
-    const buckets = [...new Set(data.map(r => r.bucket))].filter(Boolean).sort();
-
-    selected.ou     = new Set(ous);
-    selected.cloud  = new Set(clouds);
-    selected.bucket = new Set(buckets);
-
-    renderCheckboxList('ou-list',     ous,     'ou');
-    renderCheckboxList('cloud-list',  clouds,  'cloud');
-    renderCheckboxList('bucket-list', buckets, 'bucket');
-  }
-
-  function renderCheckboxList(containerId, items, type) {
-    const el = document.getElementById(containerId);
-    el.innerHTML = items.map(item => `
-      <label class="checkbox-item">
-        <input type="checkbox" checked data-type="${type}" value="${item.replace(/"/g,'&quot;')}"
-          onchange="toggleFilter('${type}', this.value, this.checked)">
-        <label>${item}</label>
-      </label>
-    `).join('');
-  }
-
-  function toggleFilter(type, value, checked) {
-    if (checked) selected[type].add(value);
-    else selected[type].delete(value);
-  }
-
-  function selectAll(type, check) {
-    const inputs = document.querySelectorAll(`input[data-type="${type}"]`);
-    inputs.forEach(inp => {
-      inp.checked = check;
-      if (check) selected[type].add(inp.value);
-      else selected[type].delete(inp.value);
-    });
-  }
-
-  function setYear(yr) {
-    activeYear = yr;
-    document.getElementById('btn-fy27').classList.toggle('active', yr === 'fy27');
-    document.getElementById('btn-fy26').classList.toggle('active', yr === 'fy26');
-  }
-
-  // ── Tabs ──
-  function switchTab(tab) {
-    activeTab = tab;
-    document.querySelectorAll('.tab-btn').forEach((b, i) => {
-      b.classList.toggle('active', ['ou','cloud','bucket','quarterly'][i] === tab);
-    });
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-    renderCharts(getFiltered());
-  }
-
-  // ── Table ──
-  function toggleTable() {
-    const btn  = document.getElementById('table-toggle-btn');
-    const wrap = document.getElementById('table-wrap');
-    btn.classList.toggle('open');
-    wrap.classList.toggle('open');
-  }
-
-  // ── Render ──
-  function render() {
-    const filtered = getFiltered();
-    renderKPIs(filtered);
-    renderCharts(filtered);
-    renderTable(filtered);
-  }
-
-  function renderKPIs(data) {
-    const yearKey = activeYear;
-    const otherKey = yearKey === 'fy27' ? 'fy26' : 'fy27';
-    const total = data.reduce((s, r) => s + r[yearKey], 0);
-    const other = data.reduce((s, r) => s + r[otherKey], 0);
-
-    document.getElementById('kpi-year-label').textContent = yearKey.toUpperCase() + ' Total';
-    document.getElementById('kpi-total').textContent = fmt(total);
-
-    if (other > 0) {
-      const p = pct(total, other);
-      const el = document.getElementById('kpi-vs');
-      el.textContent = (p >= 0 ? '▲' : '▼') + ' ' + Math.abs(p) + '% vs ' + otherKey.toUpperCase();
-      el.className = 'kpi-delta ' + (p >= 0 ? 'pos' : 'neg');
-    } else {
-      document.getElementById('kpi-vs').textContent = 'No prior year data';
-      document.getElementById('kpi-vs').className = 'kpi-delta neutral';
-    }
-
-    const ouSet = new Set(data.map(r => r.ou));
-    document.getElementById('kpi-ous').textContent = ouSet.size;
-    document.getElementById('kpi-ous-sub').textContent = new Set(data.map(r => r.cloud)).size + ' clouds · ' + new Set(data.map(r => r.bucket)).size + ' buckets';
-
-    const ouTotals = sortedEntries(groupBy(data, 'ou', yearKey)).filter(e => e[1] > 0);
-    if (ouTotals.length) {
-      document.getElementById('kpi-top-ou').textContent = ouTotals[0][0];
-      document.getElementById('kpi-top-ou-val').textContent = fmt(ouTotals[0][1]);
-      document.getElementById('kpi-top-ou-val').className = 'kpi-delta neutral';
-    }
-
-    const cloudTotals = sortedEntries(groupBy(data, 'cloud', yearKey)).filter(e => e[1] > 0);
-    if (cloudTotals.length) {
-      document.getElementById('kpi-top-cloud').textContent = cloudTotals[0][0];
-      document.getElementById('kpi-top-cloud-val').textContent = fmt(cloudTotals[0][1]);
-      document.getElementById('kpi-top-cloud-val').className = 'kpi-delta neutral';
-    }
-  }
-
-  function destroyChart(id) {
-    if (charts[id]) { charts[id].destroy(); delete charts[id]; }
-  }
-
-  function chartDefaults() {
-    return {
+  mainChart = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { display: false },
+        legend: {
+          position: 'top',
+          align: 'end',
+          labels: {
+            boxWidth: 10,
+            boxHeight: 10,
+            borderRadius: 2,
+            useBorderRadius: true,
+            font: { family: 'Inter', size: 11 },
+            color: '#6B6B6B',
+            padding: 16,
+          }
+        },
         tooltip: {
-          backgroundColor: '#1a1a2e',
-          titleFont: { family: 'Inter', size: 11 },
-          bodyFont: { family: 'Inter', size: 12 },
+          backgroundColor: '#fff',
+          borderColor: '#E5E5E5',
+          borderWidth: 1,
+          titleColor: '#181818',
+          bodyColor: '#6B6B6B',
+          titleFont: { family: 'Inter', size: 12, weight: '600' },
+          bodyFont: { family: 'Inter', size: 11 },
           padding: 10,
-          callbacks: { label: ctx => ' ' + fmtFull(ctx.parsed.y ?? ctx.parsed.x) }
+          callbacks: {
+            label: ctx => ' ' + ctx.dataset.label + ': ' + FMT_FULL(ctx.raw)
+          }
         }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 10 }, color: '#999', maxRotation: 35 } },
+        x: {
+          grid: { display: false },
+          border: { display: false },
+          ticks: {
+            font: { family: 'Inter', size: 10 },
+            color: '#9B9B9B',
+            maxRotation: 35,
+          }
+        },
         y: {
+          max: maxVal * 1.12,
+          border: { display: false },
           grid: { color: '#F0F0F0' },
-          ticks: { font: { family: 'Inter', size: 10 }, color: '#999',
-            callback: v => v >= 1e6 ? '$' + (v/1e6).toFixed(0) + 'M' : v >= 1e3 ? '$' + (v/1e3).toFixed(0) + 'K' : '$' + v }
+          ticks: {
+            font: { family: 'Inter', size: 10 },
+            color: '#9B9B9B',
+            callback: v => FMT(v),
+            maxTicksLimit: 6,
+          }
         }
       }
-    };
-  }
+    }
+  });
+}
 
-  function renderCharts(data) {
-    if (activeTab === 'ou')        renderOUChart(data);
-    if (activeTab === 'cloud')     renderCloudChart(data);
-    if (activeTab === 'bucket')    renderBucketChart(data);
-    if (activeTab === 'quarterly') renderQuarterlyChart(data);
-  }
+// ── Table ──
+function updateTable() {
+  const data = getFiltered();
+  const cy = activeYear, py = getCompareYear();
+  document.getElementById('th-primary').textContent = cy.toUpperCase();
+  document.getElementById('th-compare').textContent = py.toUpperCase();
 
-  function renderOUChart(data) {
-    destroyChart('ou');
-    const fy27map = groupBy(data, 'ou', 'fy27');
-    const fy26map = groupBy(data, 'ou', 'fy26');
-    const labels = sortedEntries(fy27map).filter(e => e[1] > 0).map(e => e[0]);
-    if (!labels.length) return;
-    const ctx = document.getElementById('chart-ou').getContext('2d');
-    charts['ou'] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          { label: 'FY27', data: labels.map(l => fy27map[l] || 0), backgroundColor: CHART_COLORS.fy27, borderRadius: 3, barPercentage: 0.7 },
-          { label: 'FY26', data: labels.map(l => fy26map[l] || 0), backgroundColor: CHART_COLORS.fy26, borderRadius: 3, barPercentage: 0.7 }
-        ]
-      },
-      options: { ...chartDefaults(), plugins: { ...chartDefaults().plugins, legend: { display: true, position: 'top', align: 'end', labels: { font: { family: 'Inter', size: 11 }, boxWidth: 10, boxHeight: 10 } }, tooltip: { ...chartDefaults().plugins.tooltip, callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtFull(ctx.parsed.y) } } } }
-    });
-  }
+  const sorted = [...data].sort((a,b) => (b[cy]||0)-(a[cy]||0)).slice(0,200);
+  const rows = sorted.map(d => {
+    const cyv = d[cy]||0, pyv = d[py]||0;
+    const pct = pyv > 0 ? ((cyv-pyv)/pyv*100) : null;
+    const chgClass = pct === null ? 'chg-flat' : pct >= 0 ? 'chg-pos' : 'chg-neg';
+    const chgText = pct === null ? '—' : (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+    return `<tr>
+      <td>${d.ou}</td><td>${d.cloud}</td><td>${d.bucket}</td>
+      <td>${FMT_FULL(cyv)}</td><td>${FMT_FULL(pyv)}</td>
+      <td class="${chgClass}">${chgText}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tableBody').innerHTML = rows;
+}
 
-  function renderCloudChart(data) {
-    destroyChart('cloud');
-    const fy27map = groupBy(data, 'cloud', 'fy27');
-    const fy26map = groupBy(data, 'cloud', 'fy26');
-    const labels = sortedEntries(fy27map).filter(e => e[1] > 0).map(e => e[0]);
-    if (!labels.length) return;
-    const ctx = document.getElementById('chart-cloud').getContext('2d');
-    charts['cloud'] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          { label: 'FY27', data: labels.map(l => fy27map[l] || 0), backgroundColor: CHART_COLORS.fy27, borderRadius: 3, barPercentage: 0.7 },
-          { label: 'FY26', data: labels.map(l => fy26map[l] || 0), backgroundColor: CHART_COLORS.fy26, borderRadius: 3, barPercentage: 0.7 }
-        ]
-      },
-      options: { ...chartDefaults(), plugins: { ...chartDefaults().plugins, legend: { display: true, position: 'top', align: 'end', labels: { font: { family: 'Inter', size: 11 }, boxWidth: 10, boxHeight: 10 } }, tooltip: { ...chartDefaults().plugins.tooltip, callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtFull(ctx.parsed.y) } } } }
-    });
-  }
+function render() {
+  updateKPIs();
+  updateChart();
+  updateTable();
+}
 
-  function renderBucketChart(data) {
-    destroyChart('bucket');
-    const map = groupBy(data, 'bucket', activeYear);
-    const entries = sortedEntries(map).filter(e => e[1] > 0);
-    if (!entries.length) return;
-    const ctx = document.getElementById('chart-bucket').getContext('2d');
-    charts['bucket'] = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: entries.map(e => e[0]),
-        datasets: [{ data: entries.map(e => e[1]), backgroundColor: ['#032D60','#0176D3','#1B96FF','#C9E0F5'], borderWidth: 0, hoverOffset: 4 }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        cutout: '60%',
-        plugins: {
-          legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11 }, padding: 12, boxWidth: 10 } },
-          tooltip: { backgroundColor: '#1a1a2e', titleFont: { family: 'Inter', size: 11 }, bodyFont: { family: 'Inter', size: 12 }, padding: 10,
-            callbacks: { label: ctx => ' ' + ctx.label + ': ' + fmtFull(ctx.parsed) } }
-        }
-      }
-    });
-  }
-
-  function renderQuarterlyChart(data) {
-    destroyChart('quarterly');
-    const ous = [...selected.ou];
-    const qtrs = ['fy27q1','fy27q2','fy27q3','fy27q4'];
-    const qtrLabels = ['Q1','Q2','Q3','Q4'];
-    const totals = qtrs.map(q => data.reduce((s, r) => s + r[q], 0));
-    if (totals.every(v => v === 0)) return;
-    const ctx = document.getElementById('chart-quarterly').getContext('2d');
-    charts['quarterly'] = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: qtrLabels,
-        datasets: [{ label: 'FY27', data: totals, backgroundColor: ['#032D60','#0176D3','#1B96FF','#51BEF5'], borderRadius: 4, barPercentage: 0.5 }]
-      },
-      options: { ...chartDefaults() }
-    });
-  }
-
-  function renderTable(data) {
-    const tbody = document.getElementById('table-body');
-    const sorted = [...data].sort((a, b) => b.fy27 - a.fy27).filter(r => r.fy27 > 0 || r.fy26 > 0);
-    document.getElementById('table-row-count').textContent = '(' + sorted.length + ' rows)';
-    tbody.innerHTML = sorted.slice(0, 500).map(r => `
-      <tr>
-        <td>${r.ou}</td>
-        <td>${r.cloud}</td>
-        <td><span class="badge-bucket">${r.bucket}</span></td>
-        <td class="num">${fmtFull(r.fy27)}</td>
-        <td class="num">${r.fy26 > 0 ? fmtFull(r.fy26) : '<span style="color:var(--text-muted)">—</span>'}</td>
-      </tr>
-    `).join('');
-  }
-
-  // ── Init ──
-  document.getElementById('last-updated').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-
-  fetch('data.json')
-    .then(r => r.json())
-    .then(data => {
-      allData = data;
-      buildCheckboxes(allData);
+// ── Filter setup ──
+function buildFilter(type, values) {
+  const container = document.getElementById(type + 'Items');
+  container.innerHTML = '';
+  values.forEach(v => {
+    const item = document.createElement('div');
+    item.className = 'dropdown-item';
+    item.innerHTML = `<input type="checkbox" id="cb-${type}-${v}" checked>
+      <label for="cb-${type}-${v}">${v}</label>`;
+    item.querySelector('input').addEventListener('change', e => {
+      if (e.target.checked) filters[type].add(v);
+      else filters[type].delete(v);
+      updateFilterLabel(type);
       render();
-    })
-    .catch(() => {
-      document.querySelector('main').innerHTML = `
-        <div class="no-data">
-          <p style="font-size:24px;margin-bottom:8px;">⚠️</p>
-          <p>Could not load data.json. Make sure the file is in the same folder as index.html.</p>
-        </div>`;
     });
+    container.appendChild(item);
+    filters[type].add(v);
+  });
+  updateFilterLabel(type);
+}
+
+function updateFilterLabel(type) {
+  const all = document.querySelectorAll(`#${type}Items input`).length;
+  const sel = filters[type].size;
+  const names = { ou: 'OU', cloud: 'Cloud', bucket: 'Bucket' };
+  document.getElementById(type + 'Label').textContent =
+    sel === all ? `${names[type]}: All` :
+    sel === 0   ? `${names[type]}: None` :
+                  `${names[type]}: ${sel}`;
+}
+
+function selectAll(type) {
+  document.querySelectorAll(`#${type}Items input`).forEach(cb => {
+    cb.checked = true;
+    filters[type].add(cb.closest('.dropdown-item').querySelector('label').textContent);
+  });
+  updateFilterLabel(type);
+  render();
+}
+
+function selectNone(type) {
+  document.querySelectorAll(`#${type}Items input`).forEach(cb => { cb.checked = false; });
+  filters[type].clear();
+  updateFilterLabel(type);
+  render();
+}
+
+function resetAll() {
+  ['ou','cloud','bucket'].forEach(t => selectAll(t));
+  setYear('fy27');
+}
+
+// ── Dropdowns ──
+function toggleDropdown(type) {
+  const panel = document.getElementById(type + 'Panel');
+  const btn = document.getElementById(type + 'Btn');
+  const isOpen = panel.classList.contains('open');
+  closeAllDropdowns();
+  if (!isOpen) {
+    panel.classList.add('open');
+    btn.classList.add('open');
+  }
+}
+function closeAllDropdowns() {
+  document.querySelectorAll('.dropdown-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('open'));
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dropdown-wrap')) closeAllDropdowns();
+});
+
+// ── Year toggle ──
+function setYear(y) {
+  activeYear = y;
+  document.getElementById('fy27btn').classList.toggle('active', y === 'fy27');
+  document.getElementById('fy26btn').classList.toggle('active', y === 'fy26');
+  document.getElementById('activeBadge').textContent = y.toUpperCase() + ' DATA';
+  render();
+}
+
+// ── Tab switch ──
+function switchTab(tab, el) {
+  activeTab = tab;
+  document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  updateChart();
+}
+
+// ── Table toggle ──
+function toggleTable(btn) {
+  const wrap = document.getElementById('tableWrap');
+  const open = wrap.classList.toggle('open');
+  btn.querySelector('span').textContent = open ? '▼' : '▶';
+  btn.childNodes[1].textContent = open ? ' Hide data table' : ' View data table';
+}
+
+// ── Init ──
+fetch('data.json')
+  .then(r => r.json())
+  .then(data => {
+    allData = data;
+    const ous     = [...new Set(data.map(d => d.ou))].filter(Boolean).sort();
+    const clouds  = [...new Set(data.map(d => d.cloud))].filter(v => v && v !== 'All').sort();
+    const buckets = [...new Set(data.map(d => d.bucket))].filter(Boolean).sort();
+    buildFilter('ou', ous);
+    buildFilter('cloud', clouds);
+    buildFilter('bucket', buckets);
+    render();
+  })
+  .catch(() => {
+    document.querySelector('main').innerHTML =
+      '<p style="color:#CF222E;padding:40px">Failed to load data.json. Make sure the file exists in the same directory.</p>';
+  });
 </script>
 </body>
 </html>
