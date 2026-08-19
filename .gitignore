@@ -1,5 +1,7 @@
 .env
-*.json
+*credentials*.json
+*service_account*.json
+*-key.json
 __pycache__/
 .DS_Store
 .streamlit/secrets.toml
