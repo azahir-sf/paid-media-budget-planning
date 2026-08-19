@@ -369,14 +369,15 @@ function updateChart() {
           borderColor: '#E5E5E5',
           borderWidth: 1,
           titleColor: '#181818',
-          bodyColor: '#6B6B6B',
+          bodyColor: '#444',
           footerColor: '#9B9B9B',
-          titleFont: { family: 'Inter', size: 12, weight: '600' },
-          bodyFont: { family: 'Inter', size: 11 },
+          titleFont: { family: 'Inter', size: 13, weight: '600' },
+          bodyFont: { family: 'Inter', size: 12 },
           footerFont: { family: 'Inter', size: 11 },
-          padding: 12,
+          padding: { top: 14, bottom: 14, left: 16, right: 20 },
+          boxPadding: 6,
           callbacks: {
-            label: ctx => '  ' + ctx.dataset.label + ':  ' + FMT_FULL(ctx.raw),
+            label: ctx => '   ' + ctx.dataset.label + ':   ' + FMT_FULL(ctx.raw),
             afterBody: items => {
               if (activeTab === 'quarterly') return [];
               const hoveredLabel = items[0].label;
@@ -385,8 +386,12 @@ function updateChart() {
               const subset = data.filter(d => d[key] === hoveredLabel);
               const breakdown = groupBy(subset, breakdownKey, cy).slice(0, 6);
               if (!breakdown.length) return [];
-              const lines = ['', '  ' + breakdownKey.charAt(0).toUpperCase() + breakdownKey.slice(1) + ' breakdown:'];
-              breakdown.forEach(([name, val]) => lines.push('  · ' + name + ':  ' + FMT_FULL(val)));
+              const label = breakdownKey === 'ou' ? 'OU' : breakdownKey.charAt(0).toUpperCase() + breakdownKey.slice(1);
+              const lines = ['', '   ─── ' + label + ' Breakdown ───'];
+              breakdown.forEach(([name, val]) => {
+                const pad = name.length < 12 ? name.padEnd(14) : name.substring(0, 13) + '…';
+                lines.push('   ' + pad + '   ' + FMT_FULL(val));
+              });
               return lines;
             },
             afterFooter: () => []
@@ -400,7 +405,12 @@ function updateChart() {
           ticks: {
             font: { family: 'Inter', size: 10 },
             color: '#9B9B9B',
-            maxRotation: 35,
+            maxRotation: 45,
+            minRotation: 45,
+            callback: function(val, i) {
+              const label = this.getLabelForValue(val);
+              return label.length > 12 ? label.substring(0, 11) + '…' : label;
+            }
           }
         },
         y: {
