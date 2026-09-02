@@ -8,7 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',-apple-system,sans-serif;background:#fff;color:#181818;font-size:13px;line-height:1.5}
+body{font-family:'Inter',-apple-system,sans-serif;background:#F5F5F5;color:#181818;font-size:13px;line-height:1.5}
 
 /* ── Header ── */
 header{background:#032D60;height:60px;display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:100}
@@ -18,7 +18,7 @@ header{background:#032D60;height:60px;display:flex;align-items:center;padding:0 
 .year-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:0.03em}
 
 /* ── Filter bar ── */
-.filter-bar{background:#F7F7F7;border-bottom:1px solid #E5E5E5;padding:10px 32px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:60px;z-index:99}
+.filter-bar{background:#fff;border-bottom:1px solid #E5E5E5;padding:10px 32px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:60px;z-index:99}
 .filter-label{font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:0.08em;margin-right:4px}
 .filter-btn{background:#fff;border:1px solid #E5E5E5;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:500;color:#181818;cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color .15s}
 .filter-btn:hover{border-color:#0176D3;color:#0176D3}
@@ -45,10 +45,10 @@ header{background:#032D60;height:60px;display:flex;align-items:center;padding:0 
 .dropdown-item label{font-size:12px;color:#181818;cursor:pointer;flex:1}
 
 /* ── Main content ── */
-main{padding:28px 32px;max-width:1400px;margin:0 auto}
+main{padding:24px 32px;max-width:1400px;margin:0 auto}
 
 /* ── KPI cards ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
 .kpi-card{background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:24px;min-height:110px;display:flex;flex-direction:column;justify-content:space-between}
 .kpi-card-label{font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px}
 .kpi-card-value{font-size:32px;font-weight:700;color:#181818;letter-spacing:-0.5px;line-height:1}
@@ -57,9 +57,19 @@ main{padding:28px 32px;max-width:1400px;margin:0 auto}
 .delta.pos{color:#1A7F37;background:#DAFBE1}
 .delta.neg{color:#CF222E;background:#FFEBE9}
 .delta.neutral{color:#6B6B6B;background:#F0F0F0}
+.delta.blue{color:#0176D3;background:#E8F4FE}
+
+/* ── Insight strip ── */
+.insight-strip{background:#E8F4FE;border:1px solid #C2E0FA;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.insight-label{font-size:10px;font-weight:700;color:#0176D3;text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;white-space:nowrap}
+.insight-pills{display:flex;gap:8px;flex-wrap:wrap}
+.insight-pill{background:#fff;border:1px solid #C2E0FA;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;color:#032D60}
+
+/* ── Section divider ── */
+.section-divider{border:none;border-top:1px solid #E5E5E5;margin:32px 0 28px}
 
 /* ── Section header ── */
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .section-title{font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:0.1em}
 
 /* ── Chart tabs ── */
@@ -69,8 +79,52 @@ main{padding:28px 32px;max-width:1400px;margin:0 auto}
 .chart-tab:hover:not(.active){color:#181818;background:rgba(0,0,0,0.04)}
 
 /* ── Chart container ── */
-.chart-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:24px;margin-bottom:24px}
+.chart-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:24px;margin-bottom:8px}
 .chart-inner{position:relative;height:320px}
+.chart-inner-sm{position:relative;height:260px}
+
+/* ── Two-col layout ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+
+/* ── Regional ── */
+.regional-grid{display:grid;grid-template-columns:340px 1fr;gap:16px;margin-bottom:24px;align-items:start}
+.regional-donut-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:24px}
+.regional-donut-wrap .chart-inner-sm{height:240px}
+.regional-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.region-card{background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.region-card-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.region-card-value{font-size:24px;font-weight:700;color:#181818;letter-spacing:-0.4px}
+.region-card-share{font-size:12px;color:#6B6B6B}
+.region-bar-bg{height:4px;background:#F0F0F0;border-radius:2px;margin-top:4px}
+.region-bar-fill{height:4px;border-radius:2px}
+
+/* ── Matrix ── */
+.matrix-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;margin-bottom:24px}
+.matrix-scroll{overflow-x:auto}
+.matrix-table{width:100%;border-collapse:collapse;font-size:11px}
+.matrix-table th{padding:8px 12px;text-align:right;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.05em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+.matrix-table th.row-head{text-align:left;min-width:130px;position:sticky;left:0;background:#F7F7F7;z-index:2}
+.matrix-table td{padding:7px 12px;text-align:right;border-bottom:1px solid #F5F5F5;white-space:nowrap;font-variant-numeric:tabular-nums}
+.matrix-table td.row-head{text-align:left;font-weight:500;color:#181818;background:#fff;position:sticky;left:0;z-index:1;border-right:1px solid #F0F0F0}
+.matrix-table tr:last-child td{background:#F7F7F7!important;font-weight:700;color:#032D60;border-top:2px solid #E5E5E5}
+.matrix-table th.total-col{background:#F0F0F0;border-left:1px solid #E5E5E5;font-weight:700;color:#032D60}
+.matrix-table td.total-col{border-left:1px solid #F0F0F0;font-weight:700;color:#032D60}
+.cell-zero{color:#D0D0D0!important}
+
+/* ── League table ── */
+.league-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;margin-bottom:24px}
+.league-table{width:100%;border-collapse:collapse;font-size:12px}
+.league-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+.league-table th.num{text-align:right}
+.league-table td{padding:9px 16px;border-bottom:1px solid #F5F5F5;color:#181818;vertical-align:middle}
+.league-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.league-table tr:hover td{background:#F7F9FF}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;background:#F0F0F0;color:#6B6B6B}
+.rank-badge.top3{background:#032D60;color:#fff}
+.bar-cell{min-width:100px}
+.mini-bar-bg{height:6px;background:#F0F0F0;border-radius:3px;margin-top:4px}
+.mini-bar-fill{height:6px;border-radius:3px;background:#0176D3}
 
 /* ── Table ── */
 .table-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#0176D3;cursor:pointer;margin-bottom:12px;background:none;border:none;padding:0}
@@ -87,12 +141,20 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 .chg-neg{color:#CF222E;font-weight:600}
 .chg-flat{color:#9B9B9B}
 
+/* ── Footer ── */
+.dash-footer{text-align:center;padding:24px 0 40px;font-size:11px;color:#BABABA}
+
 /* ── Responsive ── */
+@media(max-width:1100px){
+  .regional-grid{grid-template-columns:1fr}
+  .regional-stats{grid-template-columns:repeat(4,1fr)}
+}
 @media(max-width:900px){
   .kpi-grid{grid-template-columns:repeat(2,1fr)}
   .filter-bar{overflow-x:auto;flex-wrap:nowrap}
   main{padding:20px 16px}
   header{padding:0 16px}
+  .two-col,.three-col{grid-template-columns:1fr}
 }
 @media(max-width:500px){
   .kpi-grid{grid-template-columns:1fr}
@@ -163,6 +225,8 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 </div>
 
 <main>
+
+  <!-- KPI Cards -->
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-card-label" id="kpi1label">FY27 Total Budget</div>
@@ -172,10 +236,10 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
       </div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-card-label">YoY Change</div>
+      <div class="kpi-card-label">Filtered Share</div>
       <div>
         <div class="kpi-card-value" id="kpi2value">—</div>
-        <span class="delta neutral" id="kpi2delta">No prior data</span>
+        <span class="delta blue" id="kpi2delta">of total budget</span>
       </div>
     </div>
     <div class="kpi-card">
@@ -194,6 +258,13 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
     </div>
   </div>
 
+  <!-- Insight strip -->
+  <div class="insight-strip">
+    <span class="insight-label">Auto Insights</span>
+    <div class="insight-pills" id="insightPills"></div>
+  </div>
+
+  <!-- Spend Breakdown -->
   <div class="section-header">
     <span class="section-title">Spend Breakdown</span>
     <div class="chart-tabs">
@@ -224,6 +295,70 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
       <tbody id="tableBody"></tbody>
     </table>
   </div>
+
+  <hr class="section-divider">
+
+  <!-- Regional Overview -->
+  <div class="section-header">
+    <span class="section-title">Regional Overview</span>
+  </div>
+  <div class="regional-grid">
+    <div class="regional-donut-wrap">
+      <div class="chart-inner-sm">
+        <canvas id="regionalChart"></canvas>
+      </div>
+    </div>
+    <div class="regional-stats" id="regionalStats"></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- OU × Cloud Spend Matrix -->
+  <div class="section-header">
+    <span class="section-title">OU × Cloud Spend Matrix</span>
+  </div>
+  <div class="matrix-wrap">
+    <div class="matrix-scroll">
+      <table class="matrix-table" id="matrixTable"></table>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Budget Concentration League Table -->
+  <div class="section-header">
+    <span class="section-title">Budget Concentration — Top 15 Combinations</span>
+  </div>
+  <div class="league-wrap">
+    <table class="league-table">
+      <thead>
+        <tr>
+          <th style="width:36px">#</th>
+          <th>Operating Unit</th>
+          <th>Cloud</th>
+          <th class="num">Budget</th>
+          <th class="num">% of Total</th>
+          <th class="bar-cell">Concentration</th>
+        </tr>
+      </thead>
+      <tbody id="leagueBody"></tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Quarterly Distribution -->
+  <div class="section-header">
+    <span class="section-title">Quarterly Budget Distribution — Top OUs</span>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-inner">
+      <canvas id="quarterlyChart"></canvas>
+    </div>
+  </div>
+
+  <div class="dash-footer">Data as exported from Google Sheets &nbsp;·&nbsp; Media Finance &nbsp;·&nbsp; FY27</div>
+
 </main>
 
 <script>
@@ -232,6 +367,18 @@ let activeYear = 'fy27';
 let activeTab = 'ou';
 let filters = { ou: new Set(), cloud: new Set(), bucket: new Set() };
 let mainChart = null;
+let regionalChart = null;
+let quarterlyChart = null;
+
+const REGION_MAP = {
+  'AMER ACC':'AMER','AMER Cross-OU':'AMER','AMER ICE':'AMER','AMER REG':'AMER','LATAM':'AMER',
+  'EMEA Central':'EMEA','EMEA FR':'EMEA','EMEA North':'EMEA','EMEA South':'EMEA','EMEA UKI':'EMEA',
+  'ANZ':'APAC','ASEAN':'APAC','India':'APAC'
+};
+const REGION_COLORS = { AMER:'#0176D3', EMEA:'#3BA755', APAC:'#F3A93C', Global:'#8B5CF6' };
+const REGIONS = ['AMER','EMEA','APAC','Global'];
+
+function getRegion(ou) { return REGION_MAP[ou] || 'Global'; }
 
 const FMT = v => {
   if (v >= 1e6) return '$' + (v/1e6).toFixed(1) + 'M';
@@ -239,6 +386,7 @@ const FMT = v => {
   return '$' + Math.round(v).toLocaleString();
 };
 const FMT_FULL = v => '$' + Math.round(v).toLocaleString();
+const PCT = (v, total) => total > 0 ? ((v/total)*100).toFixed(1) + '%' : '—';
 
 function getCompareYear() { return activeYear === 'fy27' ? 'fy26' : 'fy27'; }
 
@@ -263,39 +411,65 @@ function groupBy(data, key, year) {
 // ── KPIs ──
 function updateKPIs() {
   const data = getFiltered();
-  const cy = activeYear, py = getCompareYear();
+  const cy = activeYear;
   const total = data.reduce((s,d) => s + (d[cy]||0), 0);
-  const prior = data.reduce((s,d) => s + (d[py]||0), 0);
-  const diff = total - prior;
-  const pct = prior > 0 ? ((diff/prior)*100) : null;
+  const grandTotal = allData.reduce((s,d) => s + (d[cy]||0), 0);
+  const sharePct = grandTotal > 0 ? (total/grandTotal*100) : 0;
 
   document.getElementById('kpi1label').textContent = cy.toUpperCase() + ' Total Budget';
   document.getElementById('kpi1value').textContent = FMT(total);
-  document.getElementById('kpi1sub').textContent = '';
 
-  document.getElementById('kpi2value').textContent = prior > 0 ? FMT(Math.abs(diff)) : '—';
+  document.getElementById('kpi2value').textContent = sharePct.toFixed(1) + '%';
   const d2 = document.getElementById('kpi2delta');
-  if (pct !== null) {
-    d2.textContent = (pct >= 0 ? '▲ ' : '▼ ') + Math.abs(pct).toFixed(1) + '% vs ' + py.toUpperCase();
-    d2.className = 'delta ' + (pct >= 0 ? 'pos' : 'neg');
-  } else {
-    d2.textContent = 'No prior data';
-    d2.className = 'delta neutral';
-  }
+  d2.textContent = FMT(total) + ' of ' + FMT(grandTotal);
+  d2.className = 'delta blue';
 
   const ouTotals = groupBy(data, 'ou', cy);
   const cloudTotals = groupBy(data, 'cloud', cy);
   if (ouTotals.length) {
     document.getElementById('kpi3value').textContent = ouTotals[0][0];
-    document.getElementById('kpi3sub').textContent = FMT(ouTotals[0][1]);
+    document.getElementById('kpi3sub').textContent = FMT(ouTotals[0][1]) + ' · ' + PCT(ouTotals[0][1], total);
   }
   if (cloudTotals.length) {
     document.getElementById('kpi4value').textContent = cloudTotals[0][0];
-    document.getElementById('kpi4sub').textContent = FMT(cloudTotals[0][1]);
+    document.getElementById('kpi4sub').textContent = FMT(cloudTotals[0][1]) + ' · ' + PCT(cloudTotals[0][1], total);
   }
 }
 
-// ── Chart ──
+// ── Insight strip ──
+function updateInsights() {
+  const data = getFiltered();
+  const cy = activeYear;
+  const total = data.reduce((s,d) => s + (d[cy]||0), 0);
+  if (total === 0) { document.getElementById('insightPills').innerHTML = ''; return; }
+
+  const insights = [];
+
+  // AMER share
+  const amerTotal = data.filter(d => getRegion(d.ou) === 'AMER').reduce((s,d) => s+(d[cy]||0), 0);
+  const amerPct = (amerTotal/total*100).toFixed(0);
+  insights.push('AMER accounts for ' + amerPct + '% of selected budget');
+
+  // Top OU
+  const ouTotals = groupBy(data, 'ou', cy);
+  if (ouTotals.length) {
+    insights.push('Top OU: ' + ouTotals[0][0] + ' at ' + FMT(ouTotals[0][1]));
+  }
+
+  // Top 2 clouds combined share
+  const cloudTotals = groupBy(data, 'cloud', cy).filter(([k]) => k && k !== 'All');
+  if (cloudTotals.length >= 2) {
+    const top2 = cloudTotals[0][1] + cloudTotals[1][1];
+    const top2pct = (top2/total*100).toFixed(0);
+    insights.push(cloudTotals[0][0] + ' + ' + cloudTotals[1][0] + ' = ' + top2pct + '% of spend');
+  }
+
+  document.getElementById('insightPills').innerHTML = insights.map(i =>
+    `<span class="insight-pill">${i}</span>`
+  ).join('');
+}
+
+// ── Main Bar/Quarterly Chart ──
 function updateChart() {
   const data = getFiltered();
   const cy = activeYear, py = getCompareYear();
@@ -352,25 +526,15 @@ function updateChart() {
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: {
-          position: 'top',
-          align: 'end',
+          position: 'top', align: 'end',
           labels: {
-            boxWidth: 10,
-            boxHeight: 10,
-            borderRadius: 2,
-            useBorderRadius: true,
-            font: { family: 'Inter', size: 11 },
-            color: '#6B6B6B',
-            padding: 16,
+            boxWidth: 10, boxHeight: 10, borderRadius: 2, useBorderRadius: true,
+            font: { family: 'Inter', size: 11 }, color: '#6B6B6B', padding: 16,
           }
         },
         tooltip: {
-          backgroundColor: '#fff',
-          borderColor: '#E5E5E5',
-          borderWidth: 1,
-          titleColor: '#181818',
-          bodyColor: '#444',
-          footerColor: '#9B9B9B',
+          backgroundColor: '#fff', borderColor: '#E5E5E5', borderWidth: 1,
+          titleColor: '#181818', bodyColor: '#444', footerColor: '#9B9B9B',
           titleFont: { family: 'Inter', size: 13, weight: '600' },
           bodyFont: { family: 'Inter', size: 12 },
           footerFont: { family: 'Inter', size: 11 },
@@ -394,7 +558,6 @@ function updateChart() {
               });
               return lines;
             },
-            afterFooter: () => []
           }
         }
       },
@@ -403,10 +566,8 @@ function updateChart() {
           grid: { display: false },
           border: { display: false },
           ticks: {
-            font: { family: 'Inter', size: 10 },
-            color: '#9B9B9B',
-            maxRotation: 45,
-            minRotation: 45,
+            font: { family: 'Inter', size: 10 }, color: '#9B9B9B',
+            maxRotation: 45, minRotation: 45,
             callback: function(val, i) {
               const label = this.getLabelForValue(val);
               return label.length > 12 ? label.substring(0, 11) + '…' : label;
@@ -418,10 +579,283 @@ function updateChart() {
           border: { display: false },
           grid: { color: '#F0F0F0' },
           ticks: {
-            font: { family: 'Inter', size: 10 },
-            color: '#9B9B9B',
-            callback: v => FMT(v),
-            maxTicksLimit: 6,
+            font: { family: 'Inter', size: 10 }, color: '#9B9B9B',
+            callback: v => FMT(v), maxTicksLimit: 6,
+          }
+        }
+      }
+    }
+  });
+}
+
+// ── Regional ──
+function updateRegional() {
+  const data = getFiltered();
+  const cy = activeYear;
+  const total = data.reduce((s,d) => s+(d[cy]||0), 0);
+
+  const regionTotals = {};
+  REGIONS.forEach(r => regionTotals[r] = 0);
+  data.forEach(d => {
+    const r = getRegion(d.ou);
+    regionTotals[r] = (regionTotals[r] || 0) + (d[cy] || 0);
+  });
+
+  // Donut
+  const ctx = document.getElementById('regionalChart').getContext('2d');
+  if (regionalChart) regionalChart.destroy();
+
+  const regionLabels = REGIONS.filter(r => regionTotals[r] > 0);
+  const regionValues = regionLabels.map(r => regionTotals[r]);
+  const regionColors = regionLabels.map(r => REGION_COLORS[r]);
+
+  regionalChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: regionLabels,
+      datasets: [{
+        data: regionValues,
+        backgroundColor: regionColors,
+        borderWidth: 2,
+        borderColor: '#fff',
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            boxWidth: 10, boxHeight: 10, borderRadius: 2, useBorderRadius: true,
+            font: { family: 'Inter', size: 11 }, color: '#6B6B6B', padding: 14,
+          }
+        },
+        tooltip: {
+          backgroundColor: '#fff', borderColor: '#E5E5E5', borderWidth: 1,
+          titleColor: '#181818', bodyColor: '#444',
+          titleFont: { family: 'Inter', size: 12, weight: '600' },
+          bodyFont: { family: 'Inter', size: 12 },
+          callbacks: {
+            label: ctx => '  ' + FMT_FULL(ctx.raw) + '  (' + PCT(ctx.raw, total) + ')',
+          }
+        }
+      }
+    }
+  });
+
+  // Stat cards
+  const maxRegionVal = Math.max(...Object.values(regionTotals), 1);
+  document.getElementById('regionalStats').innerHTML = REGIONS.map(r => {
+    const v = regionTotals[r] || 0;
+    const pct = total > 0 ? (v/total*100).toFixed(1) : '0.0';
+    const barW = (v/maxRegionVal*100).toFixed(1);
+    return `<div class="region-card">
+      <div class="region-card-name" style="color:${REGION_COLORS[r]}">${r}</div>
+      <div class="region-card-value">${FMT(v)}</div>
+      <div class="region-card-share">${pct}% of filtered budget</div>
+      <div class="region-bar-bg"><div class="region-bar-fill" style="width:${barW}%;background:${REGION_COLORS[r]}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── Spend Matrix ──
+function updateMatrix() {
+  const data = getFiltered();
+  const cy = activeYear;
+
+  const ouSet = new Set();
+  const cloudSet = new Set();
+  data.forEach(d => {
+    if (d.ou && d.ou !== 'All') ouSet.add(d.ou);
+    if (d.cloud && d.cloud !== 'All') cloudSet.add(d.cloud);
+  });
+
+  // Sort OUs and clouds by total spend
+  const ouTotals = {};
+  const cloudTotals = {};
+  const cellMap = {};
+
+  data.forEach(d => {
+    if (!d.ou || d.ou === 'All' || !d.cloud || d.cloud === 'All') return;
+    ouTotals[d.ou] = (ouTotals[d.ou]||0) + (d[cy]||0);
+    cloudTotals[d.cloud] = (cloudTotals[d.cloud]||0) + (d[cy]||0);
+    const key = d.ou + '|||' + d.cloud;
+    cellMap[key] = (cellMap[key]||0) + (d[cy]||0);
+  });
+
+  const ous = Object.entries(ouTotals).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,12);
+  const clouds = Object.entries(cloudTotals).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,10);
+
+  // Max cell value for heat
+  const allCellVals = ous.flatMap(o => clouds.map(c => cellMap[o+'|||'+c]||0));
+  const maxCell = Math.max(...allCellVals, 1);
+
+  function cellColor(v) {
+    const ratio = v / maxCell;
+    if (ratio === 0) return 'transparent';
+    const alpha = 0.08 + ratio * 0.7;
+    return `rgba(1,118,211,${alpha.toFixed(2)})`;
+  }
+  function textColor(v) {
+    return (v/maxCell) > 0.55 ? '#fff' : '#181818';
+  }
+
+  let html = '<thead><tr><th class="row-head">OU</th>';
+  clouds.forEach(c => {
+    html += `<th>${c.length>9?c.substring(0,8)+'…':c}</th>`;
+  });
+  html += '<th class="total-col">Total</th></tr></thead><tbody>';
+
+  ous.forEach(ou => {
+    html += `<tr><td class="row-head">${ou}</td>`;
+    clouds.forEach(c => {
+      const v = cellMap[ou+'|||'+c] || 0;
+      const bg = cellColor(v);
+      const tc = textColor(v);
+      html += `<td style="background:${bg};color:${tc}" ${v===0?'class="cell-zero"':''}>${v>0?FMT(v):'—'}</td>`;
+    });
+    html += `<td class="total-col">${FMT(ouTotals[ou]||0)}</td></tr>`;
+  });
+
+  // Totals row
+  html += '<tr><td class="row-head">Total</td>';
+  clouds.forEach(c => { html += `<td class="total-col">${FMT(cloudTotals[c]||0)}</td>`; });
+  const grandTotal = ous.reduce((s,o) => s+(ouTotals[o]||0), 0);
+  html += `<td class="total-col">${FMT(grandTotal)}</td></tr>`;
+  html += '</tbody>';
+
+  document.getElementById('matrixTable').innerHTML = html;
+}
+
+// ── League Table ──
+function updateLeagueTable() {
+  const data = getFiltered();
+  const cy = activeYear;
+  const total = data.reduce((s,d) => s+(d[cy]||0), 0);
+
+  // Group by OU+Cloud
+  const combMap = {};
+  data.forEach(d => {
+    if (!d.ou || d.ou === 'All' || !d.cloud || d.cloud === 'All') return;
+    const key = d.ou + '|||' + d.cloud;
+    if (!combMap[key]) combMap[key] = { ou: d.ou, cloud: d.cloud, value: 0 };
+    combMap[key].value += (d[cy] || 0);
+  });
+
+  const top15 = Object.values(combMap).sort((a,b)=>b.value-a.value).slice(0,15);
+  const maxVal = top15.length > 0 ? top15[0].value : 1;
+
+  document.getElementById('leagueBody').innerHTML = top15.map((row, i) => {
+    const pct = PCT(row.value, total);
+    const barW = (row.value/maxVal*100).toFixed(1);
+    const rankClass = i < 3 ? 'rank-badge top3' : 'rank-badge';
+    return `<tr>
+      <td><span class="${rankClass}">${i+1}</span></td>
+      <td>${row.ou}</td>
+      <td>${row.cloud}</td>
+      <td class="num">${FMT_FULL(row.value)}</td>
+      <td class="num">${pct}</td>
+      <td class="bar-cell">
+        <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${barW}%"></div></div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Quarterly Distribution Line Chart ──
+function updateQuarterly() {
+  const data = getFiltered();
+  const cy = activeYear;
+
+  // Get top 6 OUs by spend
+  const ouTotals = {};
+  data.forEach(d => {
+    if (d.ou && d.ou !== 'All') ouTotals[d.ou] = (ouTotals[d.ou]||0) + (d[cy]||0);
+  });
+  const topOUs = Object.entries(ouTotals).sort((a,b)=>b[1]-a[1]).slice(0,6).map(x=>x[0]);
+
+  const PALETTE = ['#0176D3','#3BA755','#F3A93C','#E040FB','#CF222E','#17A2B8'];
+  const quarters = ['Q1','Q2','Q3','Q4'];
+  const qSuffixes = ['q1','q2','q3','q4'];
+
+  const datasets = topOUs.map((ou, idx) => {
+    const ouData = data.filter(d => d.ou === ou);
+    const vals = qSuffixes.map(q => ouData.reduce((s,d) => s+(d[cy+q]||0), 0));
+    return {
+      label: ou,
+      data: vals,
+      borderColor: PALETTE[idx],
+      backgroundColor: PALETTE[idx] + '18',
+      borderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      pointBackgroundColor: PALETTE[idx],
+      tension: 0.3,
+      fill: false,
+    };
+  });
+
+  // Total line
+  const totalVals = qSuffixes.map(q => data.reduce((s,d) => s+(d[cy+q]||0), 0));
+  datasets.push({
+    label: 'Total',
+    data: totalVals,
+    borderColor: '#032D60',
+    backgroundColor: 'transparent',
+    borderWidth: 2.5,
+    borderDash: [5,3],
+    pointRadius: 5,
+    pointHoverRadius: 7,
+    pointBackgroundColor: '#032D60',
+    tension: 0.3,
+    fill: false,
+  });
+
+  const ctx = document.getElementById('quarterlyChart').getContext('2d');
+  if (quarterlyChart) quarterlyChart.destroy();
+
+  quarterlyChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: quarters, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top', align: 'end',
+          labels: {
+            boxWidth: 10, boxHeight: 2, borderRadius: 0, useBorderRadius: false,
+            font: { family: 'Inter', size: 11 }, color: '#6B6B6B', padding: 16,
+          }
+        },
+        tooltip: {
+          backgroundColor: '#fff', borderColor: '#E5E5E5', borderWidth: 1,
+          titleColor: '#181818', bodyColor: '#444',
+          titleFont: { family: 'Inter', size: 13, weight: '600' },
+          bodyFont: { family: 'Inter', size: 12 },
+          padding: { top: 12, bottom: 12, left: 14, right: 18 },
+          boxPadding: 5,
+          callbacks: {
+            label: ctx => '  ' + ctx.dataset.label + ':  ' + FMT_FULL(ctx.raw),
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          border: { display: false },
+          ticks: { font: { family: 'Inter', size: 11 }, color: '#9B9B9B' }
+        },
+        y: {
+          border: { display: false },
+          grid: { color: '#F0F0F0' },
+          ticks: {
+            font: { family: 'Inter', size: 10 }, color: '#9B9B9B',
+            callback: v => FMT(v), maxTicksLimit: 6,
           }
         }
       }
@@ -453,7 +887,12 @@ function updateTable() {
 
 function render() {
   updateKPIs();
+  updateInsights();
   updateChart();
+  updateRegional();
+  updateMatrix();
+  updateLeagueTable();
+  updateQuarterly();
   updateTable();
 }
 
@@ -515,10 +954,7 @@ function toggleDropdown(type) {
   const btn = document.getElementById(type + 'Btn');
   const isOpen = panel.classList.contains('open');
   closeAllDropdowns();
-  if (!isOpen) {
-    panel.classList.add('open');
-    btn.classList.add('open');
-  }
+  if (!isOpen) { panel.classList.add('open'); btn.classList.add('open'); }
 }
 function closeAllDropdowns() {
   document.querySelectorAll('.dropdown-panel').forEach(p => p.classList.remove('open'));
