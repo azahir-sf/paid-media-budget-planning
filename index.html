@@ -316,6 +316,10 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   <!-- OU × Cloud Spend Matrix -->
   <div class="section-header">
     <span class="section-title">OU × Cloud Spend Matrix</span>
+    <div class="year-toggle" style="font-size:11px;">
+      <button id="matrixToggle$" class="active" onclick="setMatrixMode('$')">$</button>
+      <button id="matrixToggle%" onclick="setMatrixMode('%')">%</button>
+    </div>
   </div>
   <div class="matrix-wrap">
     <div class="matrix-scroll">
@@ -662,18 +666,18 @@ function updateRegional() {
 }
 
 // ── Spend Matrix ──
+let matrixMode = '$';
+function setMatrixMode(mode) {
+  matrixMode = mode;
+  document.getElementById('matrixToggle$').classList.toggle('active', mode === '$');
+  document.getElementById('matrixToggle%').classList.toggle('active', mode === '%');
+  updateMatrix();
+}
+
 function updateMatrix() {
   const data = getFiltered();
   const cy = activeYear;
 
-  const ouSet = new Set();
-  const cloudSet = new Set();
-  data.forEach(d => {
-    if (d.ou && d.ou !== 'All') ouSet.add(d.ou);
-    if (d.cloud && d.cloud !== 'All') cloudSet.add(d.cloud);
-  });
-
-  // Sort OUs and clouds by total spend
   const ouTotals = {};
   const cloudTotals = {};
   const cellMap = {};
@@ -688,8 +692,8 @@ function updateMatrix() {
 
   const ous = Object.entries(ouTotals).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,12);
   const clouds = Object.entries(cloudTotals).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,10);
+  const grandTotal = ous.reduce((s,o) => s+(ouTotals[o]||0), 0);
 
-  // Max cell value for heat
   const allCellVals = ous.flatMap(o => clouds.map(c => cellMap[o+'|||'+c]||0));
   const maxCell = Math.max(...allCellVals, 1);
 
@@ -702,12 +706,20 @@ function updateMatrix() {
   function textColor(v) {
     return (v/maxCell) > 0.55 ? '#fff' : '#181818';
   }
+  function cellDisplay(v) {
+    if (v === 0) return '—';
+    if (matrixMode === '%') {
+      const pct = grandTotal > 0 ? (v / grandTotal * 100) : 0;
+      return pct < 0.1 ? '<0.1%' : pct.toFixed(1) + '%';
+    }
+    return FMT(v);
+  }
 
   let html = '<thead><tr><th class="row-head">OU</th>';
   clouds.forEach(c => {
     html += `<th>${c.length>9?c.substring(0,8)+'…':c}</th>`;
   });
-  html += '<th class="total-col">Total</th></tr></thead><tbody>';
+  html += `<th class="total-col">${matrixMode === '%' ? '% Share' : 'Total'}</th></tr></thead><tbody>`;
 
   ous.forEach(ou => {
     html += `<tr><td class="row-head">${ou}</td>`;
@@ -715,16 +727,25 @@ function updateMatrix() {
       const v = cellMap[ou+'|||'+c] || 0;
       const bg = cellColor(v);
       const tc = textColor(v);
-      html += `<td style="background:${bg};color:${tc}" ${v===0?'class="cell-zero"':''}>${v>0?FMT(v):'—'}</td>`;
+      html += `<td style="background:${bg};color:${tc}">${cellDisplay(v)}</td>`;
     });
-    html += `<td class="total-col">${FMT(ouTotals[ou]||0)}</td></tr>`;
+    const rowTotal = ouTotals[ou] || 0;
+    const rowDisplay = matrixMode === '%'
+      ? (grandTotal > 0 ? (rowTotal/grandTotal*100).toFixed(1)+'%' : '—')
+      : FMT(rowTotal);
+    html += `<td class="total-col">${rowDisplay}</td></tr>`;
   });
 
   // Totals row
   html += '<tr><td class="row-head">Total</td>';
-  clouds.forEach(c => { html += `<td class="total-col">${FMT(cloudTotals[c]||0)}</td>`; });
-  const grandTotal = ous.reduce((s,o) => s+(ouTotals[o]||0), 0);
-  html += `<td class="total-col">${FMT(grandTotal)}</td></tr>`;
+  clouds.forEach(c => {
+    const v = cloudTotals[c] || 0;
+    const colDisplay = matrixMode === '%'
+      ? (grandTotal > 0 ? (v/grandTotal*100).toFixed(1)+'%' : '—')
+      : FMT(v);
+    html += `<td class="total-col">${colDisplay}</td>`;
+  });
+  html += `<td class="total-col">${matrixMode === '%' ? '100%' : FMT(grandTotal)}</td></tr>`;
   html += '</tbody>';
 
   document.getElementById('matrixTable').innerHTML = html;
