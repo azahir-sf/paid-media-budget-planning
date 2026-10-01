@@ -49,7 +49,7 @@ header{background:#032D60;height:60px;display:flex;align-items:center;padding:0 
 main{padding:24px 32px;max-width:1400px;margin:0 auto}
 
 /* ── KPI cards ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:20px}
 .kpi-card{background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:24px;min-height:110px;display:flex;flex-direction:column;justify-content:space-between}
 .kpi-card-label{font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px}
 .kpi-card-value{font-size:32px;font-weight:700;color:#181818;letter-spacing:-0.5px;line-height:1}
@@ -142,6 +142,16 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 .chg-neg{color:#CF222E;font-weight:600}
 .chg-flat{color:#9B9B9B}
 
+/* ── Cloud Summary ── */
+.cloud-summary-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;margin-bottom:28px}
+.cloud-summary-table{width:100%;border-collapse:collapse;font-size:12px}
+.cloud-summary-table th{padding:9px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+.cloud-summary-table th.num{text-align:right}
+.cloud-summary-table td{padding:9px 16px;border-bottom:1px solid #F5F5F5;color:#181818;vertical-align:middle}
+.cloud-summary-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.cloud-summary-table tr:hover td{background:#F7F9FF}
+.cloud-summary-table tr.total-row td{background:#F7F7F7!important;font-weight:700;color:#032D60;border-top:2px solid #E5E5E5}
+
 /* ── Download buttons ── */
 .dl-btn{font-size:11px;color:#0176D3;cursor:pointer;background:none;border:1px solid #C2E0FA;border-radius:5px;padding:3px 9px;font-family:inherit;font-weight:500;transition:background .15s;white-space:nowrap}
 .dl-btn:hover{background:#E8F4FE}
@@ -154,6 +164,9 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 @media(max-width:1100px){
   .regional-grid{grid-template-columns:1fr}
   .regional-stats{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:1100px){
+  .kpi-grid{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:900px){
   .kpi-grid{grid-template-columns:repeat(2,1fr)}
@@ -228,6 +241,16 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
     <button id="fy26btn" onclick="setYear('fy26')">FY26</button>
   </div>
 
+  <div class="filter-sep"></div>
+
+  <div class="year-toggle">
+    <button id="qAllBtn" class="active" onclick="setQuarter('all')">All Qtrs</button>
+    <button id="q1Btn" onclick="setQuarter('q1')">Q1</button>
+    <button id="q2Btn" onclick="setQuarter('q2')">Q2</button>
+    <button id="q3Btn" onclick="setQuarter('q3')">Q3</button>
+    <button id="q4Btn" onclick="setQuarter('q4')">Q4</button>
+  </div>
+
   <a class="reset-link" onclick="resetAll()">Reset all</a>
 </div>
 
@@ -253,17 +276,24 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
       </div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-card-label">Top OU by Spend</div>
+      <div class="kpi-card-label">Cloud Priorities</div>
       <div>
-        <div class="kpi-card-value" id="kpi3value" style="font-size:22px;letter-spacing:-0.3px">—</div>
+        <div class="kpi-card-value" id="kpi3value">—</div>
         <div class="kpi-card-sub" id="kpi3sub"></div>
       </div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-card-label">Top Cloud by Spend</div>
+      <div class="kpi-card-label">Field Priorities</div>
       <div>
-        <div class="kpi-card-value" id="kpi4value" style="font-size:22px;letter-spacing:-0.3px">—</div>
+        <div class="kpi-card-value" id="kpi4value">—</div>
         <div class="kpi-card-sub" id="kpi4sub"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-label">Core Cloud Search</div>
+      <div>
+        <div class="kpi-card-value" id="kpi5value">—</div>
+        <div class="kpi-card-sub" id="kpi5sub"></div>
       </div>
     </div>
   </div>
@@ -273,6 +303,17 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
     <span class="insight-label">Auto Insights</span>
     <div class="insight-pills" id="insightPills"></div>
   </div>
+
+  <!-- Cloud Summary -->
+  <div class="section-header" style="margin-top:8px">
+    <span class="section-title">Summary by Cloud</span>
+    <button class="dl-btn" onclick="dlCloudSummary()">↓ CSV</button>
+  </div>
+  <div class="cloud-summary-wrap">
+    <table class="cloud-summary-table" id="cloudSummaryTable"></table>
+  </div>
+
+  <hr class="section-divider">
 
   <!-- Spend Breakdown -->
   <div class="section-header">
@@ -393,6 +434,7 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 <script>
 let allData = [];
 let activeYear = 'fy27';
+let activeQuarter = 'all';
 let activeTab = 'ou';
 let filters = { ou: new Set(), cloud: new Set(), bucket: new Set() };
 let mainChart = null;
@@ -419,6 +461,16 @@ const PCT = (v, total) => total > 0 ? ((v/total)*100).toFixed(1) + '%' : '—';
 
 function getCompareYear() { return activeYear === 'fy27' ? 'fy26' : 'fy27'; }
 
+function getVal(d, year) {
+  if (activeQuarter === 'all') return d[year] || 0;
+  return d[year + activeQuarter] || 0;
+}
+
+function hasQuarterlyPrior() {
+  const py = getCompareYear();
+  return activeQuarter === 'all' || allData.some(d => d[py + activeQuarter] !== undefined);
+}
+
 function getFiltered() {
   return allData.filter(d =>
     filters.ou.has(d.ou) &&
@@ -432,7 +484,7 @@ function groupBy(data, key, year) {
   data.forEach(d => {
     const k = d[key];
     if (!map[k]) map[k] = 0;
-    map[k] += d[year] || 0;
+    map[k] += getVal(d, year);
   });
   return Object.entries(map).sort((a,b) => b[1]-a[1]);
 }
@@ -441,11 +493,12 @@ function groupBy(data, key, year) {
 function updateKPIs() {
   const data = getFiltered();
   const cy = activeYear;
-  const total = data.reduce((s,d) => s + (d[cy]||0), 0);
-  const grandTotal = allData.reduce((s,d) => s + (d[cy]||0), 0);
+  const total = data.reduce((s,d) => s + getVal(d,cy), 0);
+  const grandTotal = allData.reduce((s,d) => s + getVal(d,cy), 0);
   const sharePct = grandTotal > 0 ? (total/grandTotal*100) : 0;
 
-  document.getElementById('kpi1label').textContent = cy.toUpperCase() + ' Total Budget';
+  const qLabel = activeQuarter === 'all' ? '' : ' ' + activeQuarter.toUpperCase();
+  document.getElementById('kpi1label').textContent = cy.toUpperCase() + qLabel + ' Total Budget';
   document.getElementById('kpi1value').textContent = FMT(total);
 
   document.getElementById('kpi2value').textContent = sharePct.toFixed(1) + '%';
@@ -453,29 +506,27 @@ function updateKPIs() {
   d2.textContent = FMT(total) + ' of ' + FMT(grandTotal);
   d2.className = 'delta blue';
 
-  const ouTotals = groupBy(data, 'ou', cy);
-  const cloudTotals = groupBy(data, 'cloud', cy);
-  if (ouTotals.length) {
-    document.getElementById('kpi3value').textContent = ouTotals[0][0];
-    document.getElementById('kpi3sub').textContent = FMT(ouTotals[0][1]) + ' · ' + PCT(ouTotals[0][1], total);
-  }
-  if (cloudTotals.length) {
-    document.getElementById('kpi4value').textContent = cloudTotals[0][0];
-    document.getElementById('kpi4sub').textContent = FMT(cloudTotals[0][1]) + ' · ' + PCT(cloudTotals[0][1], total);
-  }
+  const buckets = ['Cloud Priorities', 'Field Priorities', 'Core Cloud Search'];
+  const ids = ['kpi3','kpi4','kpi5'];
+  buckets.forEach((bucket, i) => {
+    const bData = data.filter(d => d.bucket === bucket);
+    const bTotal = bData.reduce((s,d) => s + getVal(d,cy), 0);
+    document.getElementById(ids[i]+'value').textContent = FMT(bTotal);
+    document.getElementById(ids[i]+'sub').textContent = total > 0 ? PCT(bTotal, total) + ' of filtered' : '—';
+  });
 }
 
 // ── Insight strip ──
 function updateInsights() {
   const data = getFiltered();
   const cy = activeYear;
-  const total = data.reduce((s,d) => s + (d[cy]||0), 0);
+  const total = data.reduce((s,d) => s + getVal(d,cy), 0);
   if (total === 0) { document.getElementById('insightPills').innerHTML = ''; return; }
 
   const insights = [];
 
   // AMER share
-  const amerTotal = data.filter(d => getRegion(d.ou) === 'AMER').reduce((s,d) => s+(d[cy]||0), 0);
+  const amerTotal = data.filter(d => getRegion(d.ou) === 'AMER').reduce((s,d) => s+getVal(d,cy), 0);
   const amerPct = (amerTotal/total*100).toFixed(0);
   insights.push('AMER accounts for ' + amerPct + '% of selected budget');
 
@@ -504,7 +555,7 @@ function updateChart() {
   const cy = activeYear, py = getCompareYear();
   let labels = [], cyVals = [], pyVals = [];
 
-  if (activeTab === 'quarterly') {
+  if (activeTab === 'quarterly' && activeQuarter === 'all') {
     const quarters = ['Q1','Q2','Q3','Q4'];
     const qKeys = [cy+'q1', cy+'q2', cy+'q3', cy+'q4'];
     const pKeys = [py+'q1', py+'q2', py+'q3', py+'q4'];
@@ -512,14 +563,15 @@ function updateChart() {
     cyVals = qKeys.map(k => data.reduce((s,d) => s+(d[k]||0), 0));
     pyVals = pKeys.map(k => data.reduce((s,d) => s+(d[k]||0), 0));
   } else {
-    const key = activeTab === 'ou' ? 'ou' : activeTab === 'cloud' ? 'cloud' : 'bucket';
+    const tab = (activeTab === 'quarterly') ? 'ou' : activeTab;
+    const key = tab === 'ou' ? 'ou' : tab === 'cloud' ? 'cloud' : 'bucket';
     const cyGroups = groupBy(data, key, cy);
     const pyMap = {};
     groupBy(data, key, py).forEach(([k,v]) => pyMap[k] = v);
     const top = cyGroups.slice(0, 20);
     labels = top.map(x => x[0]);
     cyVals = top.map(x => x[1]);
-    pyVals = labels.map(l => pyMap[l] || 0);
+    pyVals = hasQuarterlyPrior() ? labels.map(l => pyMap[l] || 0) : labels.map(() => 0);
   }
 
   const ctx = document.getElementById('mainChart').getContext('2d');
@@ -621,13 +673,13 @@ function updateChart() {
 function updateRegional() {
   const data = getFiltered();
   const cy = activeYear;
-  const total = data.reduce((s,d) => s+(d[cy]||0), 0);
+  const total = data.reduce((s,d) => s+getVal(d,cy), 0);
 
   const regionTotals = {};
   REGIONS.forEach(r => regionTotals[r] = 0);
   data.forEach(d => {
     const r = getRegion(d.ou);
-    regionTotals[r] = (regionTotals[r] || 0) + (d[cy] || 0);
+    regionTotals[r] = (regionTotals[r] || 0) + getVal(d, cy);
   });
 
   // Donut
@@ -709,10 +761,10 @@ function updateMatrix() {
 
   data.forEach(d => {
     if (!d.ou || d.ou === 'All' || !d.cloud || d.cloud === 'All') return;
-    ouTotals[d.ou] = (ouTotals[d.ou]||0) + (d[cy]||0);
-    cloudTotals[d.cloud] = (cloudTotals[d.cloud]||0) + (d[cy]||0);
+    ouTotals[d.ou] = (ouTotals[d.ou]||0) + getVal(d,cy);
+    cloudTotals[d.cloud] = (cloudTotals[d.cloud]||0) + getVal(d,cy);
     const key = d.ou + '|||' + d.cloud;
-    cellMap[key] = (cellMap[key]||0) + (d[cy]||0);
+    cellMap[key] = (cellMap[key]||0) + getVal(d,cy);
   });
 
   const ous = Object.entries(ouTotals).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,12);
@@ -780,7 +832,7 @@ function updateMatrix() {
 function updateLeagueTable() {
   const data = getFiltered();
   const cy = activeYear;
-  const total = data.reduce((s,d) => s+(d[cy]||0), 0);
+  const total = data.reduce((s,d) => s+getVal(d,cy), 0);
 
   // Group by OU+Cloud
   const combMap = {};
@@ -788,7 +840,7 @@ function updateLeagueTable() {
     if (!d.ou || d.ou === 'All' || !d.cloud || d.cloud === 'All') return;
     const key = d.ou + '|||' + d.cloud;
     if (!combMap[key]) combMap[key] = { ou: d.ou, cloud: d.cloud, value: 0 };
-    combMap[key].value += (d[cy] || 0);
+    combMap[key].value += getVal(d, cy);
   });
 
   const top15 = Object.values(combMap).sort((a,b)=>b.value-a.value).slice(0,15);
@@ -813,6 +865,15 @@ function updateLeagueTable() {
 
 // ── Quarterly Distribution Line Chart ──
 function updateQuarterly() {
+  const qWrap = document.getElementById('quarterlyChart').closest('.chart-wrap');
+  const qHeader = qWrap.previousElementSibling;
+  if (activeQuarter !== 'all') {
+    qWrap.style.display = 'none';
+    qHeader.style.display = 'none';
+    return;
+  }
+  qWrap.style.display = '';
+  qHeader.style.display = '';
   const data = getFiltered();
   const cy = activeYear;
 
@@ -916,9 +977,9 @@ function updateTable() {
   document.getElementById('th-primary').textContent = cy.toUpperCase();
   document.getElementById('th-compare').textContent = py.toUpperCase();
 
-  const sorted = [...data].sort((a,b) => (b[cy]||0)-(a[cy]||0)).slice(0,200);
+  const sorted = [...data].sort((a,b) => getVal(b,cy)-getVal(a,cy)).slice(0,200);
   const rows = sorted.map(d => {
-    const cyv = d[cy]||0, pyv = d[py]||0;
+    const cyv = getVal(d,cy), pyv = hasQuarterlyPrior() ? getVal(d,py) : 0;
     const pct = pyv > 0 ? ((cyv-pyv)/pyv*100) : null;
     const chgClass = pct === null ? 'chg-flat' : pct >= 0 ? 'chg-pos' : 'chg-neg';
     const chgText = pct === null ? '—' : (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
@@ -934,6 +995,7 @@ function updateTable() {
 function render() {
   updateKPIs();
   updateInsights();
+  updateCloudSummary();
   updateChart();
   updateRegional();
   updateMatrix();
@@ -992,6 +1054,7 @@ function selectNone(type) {
 function resetAll() {
   ['ou','cloud','bucket'].forEach(t => selectAll(t));
   setYear('fy27');
+  setQuarter('all');
 }
 
 // ── Dropdowns ──
@@ -1010,12 +1073,79 @@ document.addEventListener('click', e => {
   if (!e.target.closest('.dropdown-wrap')) closeAllDropdowns();
 });
 
+// ── Cloud Summary ──
+function updateCloudSummary() {
+  const data = getFiltered();
+  const cy = activeYear, py = getCompareYear();
+  const showYoY = hasQuarterlyPrior();
+  const total = data.reduce((s,d) => s+getVal(d,cy), 0);
+
+  const cloudMap = {};
+  data.forEach(d => {
+    if (!d.cloud || d.cloud === 'All') return;
+    if (!cloudMap[d.cloud]) cloudMap[d.cloud] = {cy:0, py:0};
+    cloudMap[d.cloud].cy += getVal(d, cy);
+    cloudMap[d.cloud].py += showYoY ? getVal(d, py) : 0;
+  });
+
+  const sorted = Object.entries(cloudMap).sort((a,b) => b[1].cy - a[1].cy);
+  const grandPy = showYoY ? data.reduce((s,d) => s+getVal(d,py), 0) : 0;
+
+  const qLabel = activeQuarter === 'all' ? cy.toUpperCase() : cy.toUpperCase() + ' ' + activeQuarter.toUpperCase();
+  const pyLabel = showYoY ? (activeQuarter === 'all' ? py.toUpperCase() : py.toUpperCase() + ' ' + activeQuarter.toUpperCase()) : null;
+
+  let html = `<thead><tr>
+    <th>Cloud</th>
+    <th class="num">${qLabel} Budget</th>
+    <th class="num">% of Total</th>
+    ${showYoY ? `<th class="num">${pyLabel}</th><th class="num">YoY Change</th>` : ''}
+  </tr></thead><tbody>`;
+
+  sorted.forEach(([cloud, vals]) => {
+    const pct = PCT(vals.cy, total);
+    const yoy = showYoY && vals.py > 0
+      ? `<span class="${vals.cy >= vals.py ? 'chg-pos' : 'chg-neg'}">${vals.cy >= vals.py ? '+' : ''}${((vals.cy-vals.py)/vals.py*100).toFixed(1)}%</span>`
+      : '<span class="chg-flat">—</span>';
+    html += `<tr>
+      <td><strong>${cloud}</strong></td>
+      <td class="num">${FMT_FULL(vals.cy)}</td>
+      <td class="num">${pct}</td>
+      ${showYoY ? `<td class="num">${FMT_FULL(vals.py)}</td><td class="num">${yoy}</td>` : ''}
+    </tr>`;
+  });
+
+  // Totals row
+  const totalPy = sorted.reduce((s,[,v]) => s+v.py, 0);
+  const totalYoy = showYoY && totalPy > 0
+    ? `<span class="${total >= totalPy ? 'chg-pos' : 'chg-neg'}">${total >= totalPy ? '+' : ''}${((total-totalPy)/totalPy*100).toFixed(1)}%</span>`
+    : '<span class="chg-flat">—</span>';
+  html += `<tr class="total-row">
+    <td>Total</td>
+    <td class="num">${FMT_FULL(total)}</td>
+    <td class="num">100%</td>
+    ${showYoY ? `<td class="num">${FMT_FULL(totalPy)}</td><td class="num">${totalYoy}</td>` : ''}
+  </tr>`;
+
+  html += '</tbody>';
+  document.getElementById('cloudSummaryTable').innerHTML = html;
+}
+
 // ── Year toggle ──
 function setYear(y) {
   activeYear = y;
   document.getElementById('fy27btn').classList.toggle('active', y === 'fy27');
   document.getElementById('fy26btn').classList.toggle('active', y === 'fy26');
   document.getElementById('activeBadge').textContent = y.toUpperCase() + ' DATA';
+  render();
+}
+
+// ── Quarter toggle ──
+function setQuarter(q) {
+  activeQuarter = q;
+  ['all','q1','q2','q3','q4'].forEach(v => {
+    const btn = document.getElementById(v === 'all' ? 'qAllBtn' : v + 'Btn');
+    if (btn) btn.classList.toggle('active', v === q);
+  });
   render();
 }
 
@@ -1102,6 +1232,28 @@ function dlRegionalStats() {
   REGIONS.forEach(r => rows.push([r,regionTotals[r]||0,total>0?((regionTotals[r]||0)/total*100).toFixed(1)+'%':'—']));
   downloadCSV(rows, 'regional-overview');
 }
+function dlCloudSummary() {
+  const data = getFiltered(); const cy = activeYear, py = getCompareYear();
+  const showYoY = hasQuarterlyPrior();
+  const total = data.reduce((s,d) => s+getVal(d,cy), 0);
+  const cloudMap = {};
+  data.forEach(d => {
+    if (!d.cloud||d.cloud==='All') return;
+    if (!cloudMap[d.cloud]) cloudMap[d.cloud]={cy:0,py:0};
+    cloudMap[d.cloud].cy+=getVal(d,cy);
+    cloudMap[d.cloud].py+=showYoY?getVal(d,py):0;
+  });
+  const headers = ['Cloud', cy.toUpperCase()+' Budget', '% of Total'];
+  if (showYoY) headers.push(py.toUpperCase(), 'YoY Change %');
+  const rows = [headers];
+  Object.entries(cloudMap).sort((a,b)=>b[1].cy-a[1].cy).forEach(([cloud,vals]) => {
+    const row = [cloud, vals.cy, total>0?(vals.cy/total*100).toFixed(1)+'%':'—'];
+    if (showYoY) row.push(vals.py, vals.py>0?((vals.cy-vals.py)/vals.py*100).toFixed(1)+'%':'—');
+    rows.push(row);
+  });
+  downloadCSV(rows, 'cloud-summary');
+}
+
 function dlKPIs() {
   const data = getFiltered(); const cy = activeYear;
   const total = data.reduce((s,d)=>s+(d[cy]||0),0);
