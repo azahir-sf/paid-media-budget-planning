@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paid Media Budget Planning</title>
+<title>Paid Media Annual Budget Planning Dashboard</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -142,6 +142,11 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 .chg-neg{color:#CF222E;font-weight:600}
 .chg-flat{color:#9B9B9B}
 
+/* ── Download buttons ── */
+.dl-btn{font-size:11px;color:#0176D3;cursor:pointer;background:none;border:1px solid #C2E0FA;border-radius:5px;padding:3px 9px;font-family:inherit;font-weight:500;transition:background .15s;white-space:nowrap}
+.dl-btn:hover{background:#E8F4FE}
+.dl-group{display:flex;gap:6px;align-items:center}
+
 /* ── Footer ── */
 .dash-footer{text-align:center;padding:24px 0 40px;font-size:11px;color:#BABABA}
 
@@ -168,7 +173,7 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 <header>
   <img src="logo.png" alt="Salesforce" style="height:32px;width:auto;flex-shrink:0;margin-right:4px;">
   <div class="header-title">
-    <h1>Paid Media Budget Planning</h1>
+    <h1>Paid Media Annual Budget Planning Dashboard</h1>
     <p>Media Finance &nbsp;·&nbsp; FY Budget Analysis</p>
   </div>
   <span class="year-badge" id="activeBadge">FY27 DATA</span>
@@ -229,6 +234,9 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 <main>
 
   <!-- KPI Cards -->
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+    <button class="dl-btn" onclick="dlKPIs()">↓ Export KPIs</button>
+  </div>
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-card-label" id="kpi1label">FY27 Total Budget</div>
@@ -269,11 +277,14 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   <!-- Spend Breakdown -->
   <div class="section-header">
     <span class="section-title">Spend Breakdown</span>
-    <div class="chart-tabs">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="dl-btn" onclick="dlMainChart()">↓ PNG</button>
+      <div class="chart-tabs">
       <button class="chart-tab active" onclick="switchTab('ou',this)">By OU</button>
       <button class="chart-tab" onclick="switchTab('cloud',this)">By Cloud</button>
       <button class="chart-tab" onclick="switchTab('bucket',this)">By Bucket</button>
       <button class="chart-tab" onclick="switchTab('quarterly',this)">Quarterly</button>
+    </div>
     </div>
   </div>
 
@@ -283,9 +294,12 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
     </div>
   </div>
 
-  <button class="table-toggle" onclick="toggleTable(this)">
-    <span>▶</span> View data table
-  </button>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <button class="table-toggle" style="margin-bottom:0" onclick="toggleTable(this)">
+      <span>▶</span> View data table
+    </button>
+    <button class="dl-btn" onclick="dlDataTable()">↓ CSV</button>
+  </div>
   <div class="table-wrap" id="tableWrap">
     <table>
       <thead>
@@ -303,6 +317,10 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   <!-- Regional Overview -->
   <div class="section-header">
     <span class="section-title">Regional Overview</span>
+    <div class="dl-group">
+      <button class="dl-btn" onclick="dlRegionalChart()">↓ PNG</button>
+      <button class="dl-btn" onclick="dlRegionalStats()">↓ CSV</button>
+    </div>
   </div>
   <div class="regional-grid">
     <div class="regional-donut-wrap">
@@ -318,9 +336,12 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   <!-- OU × Cloud Spend Matrix -->
   <div class="section-header">
     <span class="section-title">OU × Cloud Spend Matrix</span>
-    <div class="year-toggle" style="font-size:11px;">
+    <div class="dl-group">
+      <button class="dl-btn" onclick="dlMatrix()">↓ CSV</button>
+      <div class="year-toggle" style="font-size:11px;">
       <button id="matrixToggle$" class="active" onclick="setMatrixMode('$')">$</button>
       <button id="matrixToggle%" onclick="setMatrixMode('%')">%</button>
+    </div>
     </div>
   </div>
   <div class="matrix-wrap">
@@ -334,6 +355,7 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   <!-- Budget Concentration League Table -->
   <div class="section-header">
     <span class="section-title">Budget Concentration — Top 15 Combinations</span>
+    <button class="dl-btn" onclick="dlLeagueTable()">↓ CSV</button>
   </div>
   <div class="league-wrap">
     <table class="league-table">
@@ -356,6 +378,7 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   <!-- Quarterly Distribution -->
   <div class="section-header">
     <span class="section-title">Quarterly Budget Distribution — Top OUs</span>
+    <button class="dl-btn" onclick="dlQuarterlyChart()">↓ PNG</button>
   </div>
   <div class="chart-wrap">
     <div class="chart-inner">
@@ -1010,6 +1033,87 @@ function toggleTable(btn) {
   const open = wrap.classList.toggle('open');
   btn.querySelector('span').textContent = open ? '▼' : '▶';
   btn.childNodes[1].textContent = open ? ' Hide data table' : ' View data table';
+}
+
+// ── Downloads ──
+function downloadChart(chart, filename) {
+  const url = chart.toBase64Image('image/png', 1);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename + '.png'; a.click();
+}
+function downloadCSV(rows, filename) {
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename + '.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+function dlMainChart() { if (mainChart) downloadChart(mainChart, 'spend-breakdown'); }
+function dlRegionalChart() { if (regionalChart) downloadChart(regionalChart, 'regional-overview'); }
+function dlQuarterlyChart() { if (quarterlyChart) downloadChart(quarterlyChart, 'quarterly-distribution'); }
+function dlDataTable() {
+  const data = getFiltered(); const cy = activeYear, py = getCompareYear();
+  const rows = [['OU','Cloud','Bucket',cy.toUpperCase(),py.toUpperCase(),'Change %']];
+  [...data].sort((a,b)=>(b[cy]||0)-(a[cy]||0)).forEach(d => {
+    const cyv = d[cy]||0, pyv = d[py]||0;
+    const pct = pyv > 0 ? ((cyv-pyv)/pyv*100).toFixed(1)+'%' : '—';
+    rows.push([d.ou, d.cloud, d.bucket, cyv, pyv, pct]);
+  });
+  downloadCSV(rows, 'budget-data');
+}
+function dlMatrix() {
+  const data = getFiltered(); const cy = activeYear;
+  const ouTotals = {}, cloudTotals = {}, cellMap = {};
+  data.forEach(d => {
+    if (!d.ou||d.ou==='All'||!d.cloud||d.cloud==='All') return;
+    ouTotals[d.ou]=(ouTotals[d.ou]||0)+(d[cy]||0);
+    cloudTotals[d.cloud]=(cloudTotals[d.cloud]||0)+(d[cy]||0);
+    const k=d.ou+'|||'+d.cloud; cellMap[k]=(cellMap[k]||0)+(d[cy]||0);
+  });
+  const ous=Object.entries(ouTotals).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,12);
+  const clouds=Object.entries(cloudTotals).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,10);
+  const rows=[['OU',...clouds,'Total']];
+  ous.forEach(ou => rows.push([ou,...clouds.map(c=>cellMap[ou+'|||'+c]||0),ouTotals[ou]||0]));
+  rows.push(['Total',...clouds.map(c=>cloudTotals[c]||0),ous.reduce((s,o)=>s+(ouTotals[o]||0),0)]);
+  downloadCSV(rows, 'ou-cloud-matrix');
+}
+function dlLeagueTable() {
+  const data = getFiltered(); const cy = activeYear;
+  const total = data.reduce((s,d)=>s+(d[cy]||0),0);
+  const combMap = {};
+  data.forEach(d => {
+    if (!d.ou||d.ou==='All'||!d.cloud||d.cloud==='All') return;
+    const k=d.ou+'|||'+d.cloud;
+    if (!combMap[k]) combMap[k]={ou:d.ou,cloud:d.cloud,value:0};
+    combMap[k].value+=(d[cy]||0);
+  });
+  const rows=[['Rank','Operating Unit','Cloud','Budget','% of Total']];
+  Object.values(combMap).sort((a,b)=>b.value-a.value).slice(0,15).forEach((row,i) => {
+    rows.push([i+1,row.ou,row.cloud,row.value,total>0?(row.value/total*100).toFixed(1)+'%':'—']);
+  });
+  downloadCSV(rows, 'budget-concentration-top15');
+}
+function dlRegionalStats() {
+  const data = getFiltered(); const cy = activeYear;
+  const total = data.reduce((s,d)=>s+(d[cy]||0),0);
+  const regionTotals = {}; REGIONS.forEach(r=>regionTotals[r]=0);
+  data.forEach(d => { const r=getRegion(d.ou); regionTotals[r]=(regionTotals[r]||0)+(d[cy]||0); });
+  const rows=[['Region','Budget','% of Total']];
+  REGIONS.forEach(r => rows.push([r,regionTotals[r]||0,total>0?((regionTotals[r]||0)/total*100).toFixed(1)+'%':'—']));
+  downloadCSV(rows, 'regional-overview');
+}
+function dlKPIs() {
+  const data = getFiltered(); const cy = activeYear;
+  const total = data.reduce((s,d)=>s+(d[cy]||0),0);
+  const grandTotal = allData.reduce((s,d)=>s+(d[cy]||0),0);
+  const ouT = groupBy(data,'ou',cy); const clT = groupBy(data,'cloud',cy);
+  const rows=[['Metric','Value'],
+    [cy.toUpperCase()+' Total Budget',total],
+    ['Filtered Share %',grandTotal>0?(total/grandTotal*100).toFixed(1)+'%':'—'],
+    ['Top OU',ouT.length?ouT[0][0]:'—'],['Top OU Budget',ouT.length?ouT[0][1]:'—'],
+    ['Top Cloud',clT.length?clT[0][0]:'—'],['Top Cloud Budget',clT.length?clT[0][1]:'—'],
+  ];
+  downloadCSV(rows, 'kpi-summary');
 }
 
 // ── Init ──
