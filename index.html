@@ -212,6 +212,17 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 .pivot-table tr.pivot-total td{background:#F7F7F7!important;font-weight:700;color:#032D60;border-top:2px solid #E5E5E5}
 .pivot-table tr.pivot-total td.row-head{background:#F7F7F7!important}
 
+/* ── Slide-style table (Tab 3) ── */
+.slide-table{width:100%;border-collapse:collapse;font-size:12px}
+.slide-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;background:#032D60;color:#fff;white-space:nowrap;text-transform:uppercase;letter-spacing:.06em}
+.slide-table th.num{text-align:right}
+.slide-table td{padding:9px 16px;border-bottom:1px solid #E5E5E5;color:#181818;white-space:nowrap}
+.slide-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.slide-table td.owner-cell{color:#6B6B6B;font-style:italic;font-size:11px}
+.slide-table tr:hover td{background:#F7F9FF}
+.slide-table tr.slide-total td{background:#032D60!important;color:#fff!important;font-weight:700;border:none}
+.slide-table tr.slide-total td.num{text-align:right}
+
 /* ── Footer ── */
 .dash-footer{text-align:center;padding:24px 0 40px;font-size:11px;color:#BABABA}
 
@@ -1567,10 +1578,13 @@ function setQSel(q, el) {
   updateQView();
 }
 
+const CLOUD_ORDER = ['AI','Analytics','Commerce','Cross Cloud','Data','Industry','Integration','Marketing','Platform','Sales','Service','Operations Cloud','SMB'];
+
 function updateQView() {
   const data = getFiltered();
   const cy = activeYear;
   const qKey = qselActive === 'all' ? cy : cy + qselActive;
+  const qLabel = qselActive === 'all' ? cy.toUpperCase() + ' Full Year' : cy.toUpperCase() + ' ' + qselActive.toUpperCase();
 
   const activeBuckets = BUCKET_ORDER.filter(b => data.some(d => d.bucket === b));
   const content = document.getElementById('qviewContent');
@@ -1580,56 +1594,48 @@ function updateQView() {
     const bData = data.filter(d => d.bucket === bucket);
     if (!bData.length) return '';
 
-    const clouds = [...new Set(bData.map(d => d.cloud).filter(Boolean))].sort();
-    const allOUs = [...new Set(bData.map(d => d.ou).filter(Boolean))];
+    // Sum budget by Cloud (across all OUs)
+    const cloudTotals = {};
+    bData.forEach(d => {
+      const c = d.cloud || '—';
+      cloudTotals[c] = (cloudTotals[c] || 0) + (d[qKey] || 0);
+    });
 
-    // Sort OUs by total value for this key
-    const ouTots = {};
-    allOUs.forEach(o => ouTots[o] = bData.filter(d=>d.ou===o).reduce((s,d)=>s+(d[qKey]||0),0));
-    const sortedOUs = allOUs.sort((a,b)=>(ouTots[b]||0)-(ouTots[a]||0)).filter(o=>(ouTots[o]||0)>0);
-
-    const activeClouds = clouds.filter(c => bData.filter(d=>d.cloud===c).reduce((s,d)=>s+(d[qKey]||0),0)>0);
-    const grand = bData.reduce((s,d)=>s+(d[qKey]||0),0);
-
-    if (grand === 0) return `<div class="pivot-section">
-      <div class="pivot-title">${bucket}</div>
-      <div class="pivot-wrap" style="padding:16px;font-size:12px;color:#9B9B9B">No data for this quarter / filters</div>
+    const activeClouds = Object.keys(cloudTotals).filter(c => cloudTotals[c] > 0);
+    if (!activeClouds.length) return `<div class="pivot-section">
+      <div class="pivot-title">${qLabel} — ${bucket}</div>
+      <div class="pivot-wrap" style="padding:16px;font-size:12px;color:#9B9B9B">No data for this selection</div>
     </div>`;
 
-    const cellVal = (c,o) => bData.filter(d=>d.cloud===c&&d.ou===o).reduce((s,d)=>s+(d[qKey]||0),0);
-    const rowTot = (c) => bData.filter(d=>d.cloud===c).reduce((s,d)=>s+(d[qKey]||0),0);
-    const colTot = (o) => bData.filter(d=>d.ou===o).reduce((s,d)=>s+(d[qKey]||0),0);
-    const maxVal = Math.max(...activeClouds.map(rowTot), 1);
+    // Sort clouds in standard order
+    const orderedClouds = [...CLOUD_ORDER.filter(c => activeClouds.includes(c)), ...activeClouds.filter(c => !CLOUD_ORDER.includes(c))];
+    const total = orderedClouds.reduce((s,c) => s + (cloudTotals[c]||0), 0);
+    const budgetColLabel = qselActive === 'all' ? cy.toUpperCase() + ' Budget' : qselActive.toUpperCase() + ' Budget';
 
-    const ouCols = sortedOUs.length > 0 ? sortedOUs : allOUs.slice(0,12);
-
-    let thead = `<tr><th class="row-head">Cloud</th>`;
-    ouCols.forEach(o => thead += `<th>${o.length>11?o.substring(0,10)+'…':o}</th>`);
-    thead += `<th class="total-col">Total</th></tr>`;
-
-    const tbody = activeClouds.map(cloud => {
-      const rt = rowTot(cloud);
-      let row = `<tr><td class="row-head">${cloud}</td>`;
-      ouCols.forEach(ou => {
-        const v = cellVal(cloud, ou);
-        const ratio = v / maxVal;
-        const bg = v > 0 ? `rgba(1,118,211,${(0.06+ratio*0.65).toFixed(2)})` : 'transparent';
-        const fg = ratio > 0.5 ? '#fff' : (v > 0 ? '#032D60' : '#D0D0D0');
-        row += `<td style="background:${bg};color:${fg}">${v>0?FMT(v):'—'}</td>`;
-      });
-      row += `<td class="total-col">${FMT_FULL(rt)}</td></tr>`;
-      return row;
-    }).join('');
-
-    let totRow = `<tr class="pivot-total"><td class="row-head">Total</td>`;
-    ouCols.forEach(o => totRow += `<td class="total-col">${colTot(o)>0?FMT_FULL(colTot(o)):'—'}</td>`);
-    totRow += `<td class="total-col">${FMT_FULL(grand)}</td></tr>`;
+    const rows = orderedClouds.map(cloud => `<tr>
+      <td class="owner-cell">TBC</td>
+      <td>${cloud}</td>
+      <td class="num">${FMT_FULL(cloudTotals[cloud] || 0)}</td>
+    </tr>`).join('');
 
     return `<div class="pivot-section">
-      <div class="pivot-title">${bucket}</div>
-      <div class="pivot-wrap"><div style="overflow-x:auto">
-        <table class="pivot-table"><thead>${thead}</thead><tbody>${tbody}${totRow}</tbody></table>
-      </div></div>
+      <div class="pivot-title">${qLabel} — ${bucket}</div>
+      <div class="pivot-wrap">
+        <table class="slide-table">
+          <thead><tr>
+            <th style="width:32%">Spend Prioritization</th>
+            <th>Cloud</th>
+            <th class="num">${budgetColLabel}</th>
+          </tr></thead>
+          <tbody>
+            ${rows}
+            <tr class="slide-total">
+              <td colspan="2">Total ${bucket}</td>
+              <td class="num">${FMT_FULL(total)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>`;
   }).join('');
 }
