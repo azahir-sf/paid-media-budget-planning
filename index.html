@@ -175,30 +175,42 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 .ou-summary-table tr:hover td{background:#F7F9FF}
 .ou-summary-table tr.total-row td{background:#F7F7F7!important;font-weight:700;color:#032D60;border-top:2px solid #E5E5E5}
 
-/* ── Detail table (Tab 2) ── */
+/* ── Detail table (Tab 2) — grouped ── */
 .detail-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;margin-bottom:24px}
 .detail-table{width:100%;border-collapse:collapse;font-size:12px}
-.detail-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap;cursor:pointer;user-select:none}
-.detail-table th:hover{background:#F0F0F0}
+.detail-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap}
 .detail-table th.num{text-align:right}
-.detail-table td{padding:9px 16px;border-bottom:1px solid #F5F5F5;color:#181818;vertical-align:middle}
-.detail-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
-.detail-table tr:hover td{background:#F7F9FF}
-.detail-table tr.subtotal-row td{background:#F0F4F8;font-weight:600;color:#032D60;border-top:1px solid #E5E5E5}
+.detail-table td{padding:8px 16px;border-bottom:1px solid #F5F5F5;color:#181818;white-space:nowrap}
+.detail-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+.detail-table td.fw{font-weight:600}
+.detail-table td.indent-1{padding-left:28px}
+.detail-table td.indent-2{padding-left:44px;font-size:11px;color:#444}
+.detail-table tr.bucket-hdr td{background:#032D60;color:#fff;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.12em;padding:9px 16px;border:none}
+.detail-table tr.cloud-hdr td{background:#E8F4FE;color:#032D60;font-weight:600;padding:7px 16px;font-size:11px;border-bottom:1px solid #C2E0FA}
+.detail-table tr.cloud-subtotal td{background:#F0F4F8;font-weight:600;color:#032D60;border-top:1px solid #D0DCEA;font-size:11px}
+.detail-table tr.bucket-total td{background:#D0E4F7;font-weight:700;color:#032D60;border-top:2px solid #0176D3}
 .detail-table tr.grand-total-row td{background:#032D60!important;color:#fff!important;font-weight:700}
+.detail-table tr:not(.bucket-hdr):not(.cloud-hdr):not(.cloud-subtotal):not(.bucket-total):not(.grand-total-row):hover td{background:#F7F9FF}
 
-/* ── Quarterly view (Tab 3) ── */
-.qview-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;margin-bottom:24px}
-.qview-table{width:100%;border-collapse:collapse;font-size:12px}
-.qview-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap}
-.qview-table th.num{text-align:right}
-.qview-table th.qhdr{text-align:right;background:#E8F4FE;color:#0176D3}
-.qview-table td{padding:9px 16px;border-bottom:1px solid #F5F5F5;color:#181818}
-.qview-table td.num{text-align:right;font-variant-numeric:tabular-nums}
-.qview-table td.qcell{text-align:right;font-variant-numeric:tabular-nums;color:#032D60}
-.qview-table tr:hover td{background:#F7F9FF}
-.qview-table tr.qview-total td{background:#F7F7F7!important;font-weight:700;color:#032D60;border-top:2px solid #E5E5E5}
-.stakeholder-tag{display:inline-block;background:#E8F4FE;color:#032D60;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:600;margin-left:6px;vertical-align:middle}
+/* ── Quarterly view (Tab 3) — pivot ── */
+.qsel-tabs{display:flex;border-bottom:2px solid #E5E5E5;margin-bottom:24px;gap:0}
+.qsel-tab{padding:10px 20px;font-size:12px;font-weight:500;color:#6B6B6B;cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.qsel-tab.active{color:#032D60;font-weight:600;border-bottom-color:#032D60}
+.qsel-tab:hover:not(.active){background:#F7F7F7;color:#181818}
+.buckets-2col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:1200px){.buckets-2col{grid-template-columns:1fr}}
+.pivot-section{margin-bottom:4px}
+.pivot-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:10px 16px;background:#032D60;color:#fff;border-radius:6px 6px 0 0}
+.pivot-wrap{background:#fff;border:1px solid #E5E5E5;border-top:none;border-radius:0 0 8px 8px;overflow:hidden;margin-bottom:20px}
+.pivot-table{width:100%;border-collapse:collapse;font-size:11px}
+.pivot-table th{padding:7px 10px;text-align:right;font-size:9px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:.05em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+.pivot-table th.row-head{text-align:left;min-width:110px;position:sticky;left:0;background:#F7F7F7;z-index:2}
+.pivot-table th.total-col{background:#F0F0F0;border-left:1px solid #E5E5E5;font-weight:700;color:#032D60}
+.pivot-table td{padding:6px 10px;text-align:right;border-bottom:1px solid #F5F5F5;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pivot-table td.row-head{text-align:left;font-weight:500;color:#181818;background:#fff;position:sticky;left:0;z-index:1;border-right:1px solid #F0F0F0}
+.pivot-table td.total-col{border-left:1px solid #F0F0F0;font-weight:700;color:#032D60}
+.pivot-table tr.pivot-total td{background:#F7F7F7!important;font-weight:700;color:#032D60;border-top:2px solid #E5E5E5}
+.pivot-table tr.pivot-total td.row-head{background:#F7F7F7!important}
 
 /* ── Footer ── */
 .dash-footer{text-align:center;padding:24px 0 40px;font-size:11px;color:#BABABA}
@@ -460,12 +472,14 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
         <table class="detail-table" id="detailTable">
           <thead>
             <tr>
-              <th onclick="sortDetail('cloud')">Cloud <span id="sort-cloud"></span></th>
-              <th onclick="sortDetail('ou')">OU <span id="sort-ou"></span></th>
-              <th onclick="sortDetail('bucket')">Bucket <span id="sort-bucket"></span></th>
-              <th class="num" onclick="sortDetail('cy')">FY27 Budget <span id="sort-cy"></span></th>
-              <th class="num" onclick="sortDetail('py')">FY26 Budget <span id="sort-py"></span></th>
-              <th class="num" onclick="sortDetail('chg')">YoY Change <span id="sort-chg"></span></th>
+              <th style="min-width:220px">Bucket / Cloud / OU</th>
+              <th class="num">Q1</th>
+              <th class="num">Q2</th>
+              <th class="num">Q3</th>
+              <th class="num">Q4</th>
+              <th class="num">FY Total</th>
+              <th class="num" id="detail-fy26-header">FY26</th>
+              <th class="num">YoY</th>
             </tr>
           </thead>
           <tbody id="detailBody"></tbody>
@@ -478,51 +492,27 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 
 <!-- ── Tab 3: Quarterly View ── -->
 <div class="tab-panel" id="panel-quarterly-view">
-  <div style="padding:24px 32px;max-width:1400px;margin:0 auto">
+  <div style="padding:24px 32px;max-width:1600px;margin:0 auto">
 
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div>
         <div style="font-size:18px;font-weight:700;color:#032D60;margin-bottom:4px">Quarterly View</div>
-        <div style="font-size:12px;color:#6B6B6B">Budget by Cloud and OU across Q1–Q4 — use filters above to narrow down</div>
+        <div style="font-size:12px;color:#6B6B6B">Cloud × OU budget by Bucket and Quarter — mirrors the FY27 planning slides</div>
       </div>
       <button class="dl-btn" style="font-size:12px;padding:6px 14px" onclick="dlQView()">↓ Export CSV</button>
     </div>
 
-    <!-- Bucket selector for Tab 3 -->
-    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-      <span style="font-size:11px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:.08em;line-height:28px;margin-right:4px">View by</span>
-      <div class="year-toggle" id="qviewBucketToggle">
-        <button class="active" onclick="setQViewGroup('cloud',this)">Cloud</button>
-        <button onclick="setQViewGroup('ou',this)">OU</button>
-        <button onclick="setQViewGroup('bucket',this)">Bucket</button>
-      </div>
+    <!-- Quarter selector -->
+    <div class="qsel-tabs">
+      <button class="qsel-tab active" id="qsel-all" onclick="setQSel('all',this)">Full Year</button>
+      <button class="qsel-tab" id="qsel-q1" onclick="setQSel('q1',this)">Q1</button>
+      <button class="qsel-tab" id="qsel-q2" onclick="setQSel('q2',this)">Q2</button>
+      <button class="qsel-tab" id="qsel-q3" onclick="setQSel('q3',this)">Q3</button>
+      <button class="qsel-tab" id="qsel-q4" onclick="setQSel('q4',this)">Q4</button>
     </div>
 
-    <div class="qview-wrap">
-      <div style="overflow-x:auto">
-        <table class="qview-table" id="qviewTable">
-          <thead>
-            <tr>
-              <th id="qview-col-header">Cloud</th>
-              <th class="qhdr">Q1</th>
-              <th class="qhdr">Q2</th>
-              <th class="qhdr">Q3</th>
-              <th class="qhdr">Q4</th>
-              <th class="num">FY Total</th>
-              <th class="num">% of Budget</th>
-            </tr>
-          </thead>
-          <tbody id="qviewBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Stakeholder ownership placeholder -->
-    <div style="background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:20px;margin-top:8px">
-      <div style="font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Stakeholder Ownership</div>
-      <div style="font-size:12px;color:#6B6B6B;margin-bottom:14px">Budget owners by OU — placeholder until confirmed</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="stakeholderGrid"></div>
-    </div>
+    <!-- 2-col bucket grid -->
+    <div class="buckets-2col" id="qviewContent"></div>
 
   </div>
 </div><!-- /panel-quarterly-view -->
@@ -1453,160 +1443,206 @@ function dlOUSummary() {
   downloadCSV(rows, 'ou-summary');
 }
 
-// ── Detail Table (Tab 2) ──
-let detailSortKey = 'cy', detailSortDir = -1;
-
-function sortDetail(key) {
-  if (detailSortKey === key) detailSortDir *= -1;
-  else { detailSortKey = key; detailSortDir = -1; }
-  updateDetailTable();
-}
+// ── Detail Table (Tab 2) — grouped: Bucket → Cloud → OU ──
+const BUCKET_ORDER = ['Core Cloud Search','Cloud Priorities','Field Priorities','Global Campaigns'];
+const OU_ORDER = ['AMER ACC','AMER ICE','AMER REG','AMER Cross-OU','ANZ','ASEAN','EMEA Central','EMEA FR','EMEA North','EMEA South','EMEA UKI','India','LATAM','NextGen Platform','PubSec SFDO','Cross-OU','Global SMB'];
 
 function updateDetailTable() {
   const data = getFiltered();
   const cy = activeYear, py = getCompareYear();
+  const showYoY = hasQuarterlyPrior();
 
-  const rows = data.map(d => {
-    const cyv = getVal(d, cy), pyv = getVal(d, py);
-    const chg = pyv > 0 ? (cyv - pyv) / pyv * 100 : null;
-    return { cloud: d.cloud, ou: d.ou, bucket: d.bucket, cy: cyv, py: pyv, chg };
-  }).filter(r => r.cy > 0 || r.py > 0);
+  const h = document.getElementById('detail-fy26-header');
+  if (h) h.textContent = py.toUpperCase();
 
-  rows.sort((a,b) => {
-    const av = a[detailSortKey] ?? -Infinity;
-    const bv = b[detailSortKey] ?? -Infinity;
-    if (typeof av === 'string') return detailSortDir * av.localeCompare(bv);
-    return detailSortDir * (av - bv);
+  let html = '';
+  const grandT = {q1:0,q2:0,q3:0,q4:0,fy:0,py:0};
+
+  const dataBuckets = [...new Set(data.map(d => d.bucket).filter(Boolean))];
+  const orderedBuckets = [...BUCKET_ORDER.filter(b => dataBuckets.includes(b)), ...dataBuckets.filter(b => !BUCKET_ORDER.includes(b))];
+
+  orderedBuckets.forEach(bucket => {
+    const bData = data.filter(d => d.bucket === bucket);
+    if (!bData.length) return;
+
+    const cloudMap = {};
+    bData.forEach(d => {
+      const c = d.cloud || '—', o = d.ou || '—';
+      if (!cloudMap[c]) cloudMap[c] = {};
+      if (!cloudMap[c][o]) cloudMap[c][o] = {q1:0,q2:0,q3:0,q4:0,fy:0,py:0};
+      cloudMap[c][o].q1 += d[cy+'q1']||0; cloudMap[c][o].q2 += d[cy+'q2']||0;
+      cloudMap[c][o].q3 += d[cy+'q3']||0; cloudMap[c][o].q4 += d[cy+'q4']||0;
+      cloudMap[c][o].fy += d[cy]||0; cloudMap[c][o].py += d[py]||0;
+    });
+
+    const bT = {q1:0,q2:0,q3:0,q4:0,fy:0,py:0};
+    html += `<tr class="bucket-hdr"><td colspan="8">${bucket}</td></tr>`;
+
+    const clouds = Object.keys(cloudMap).sort();
+    const multiCloud = clouds.length > 1;
+
+    clouds.forEach(cloud => {
+      const ouData = cloudMap[cloud];
+      const cT = {q1:0,q2:0,q3:0,q4:0,fy:0,py:0};
+
+      if (multiCloud) html += `<tr class="cloud-hdr"><td class="indent-1" colspan="8">${cloud}</td></tr>`;
+
+      const ouKeys = Object.keys(ouData);
+      const orderedOUs = [...OU_ORDER.filter(o => ouKeys.includes(o)), ...ouKeys.filter(o => !OU_ORDER.includes(o)).sort((a,b)=>(ouData[b].fy||0)-(ouData[a].fy||0))];
+
+      orderedOUs.forEach(ou => {
+        const v = ouData[ou];
+        if (v.fy === 0 && v.py === 0) return;
+        cT.q1+=v.q1; cT.q2+=v.q2; cT.q3+=v.q3; cT.q4+=v.q4; cT.fy+=v.fy; cT.py+=v.py;
+        const yoy = showYoY && v.py > 0 ? `<span class="${v.fy>=v.py?'chg-pos':'chg-neg'}">${v.fy>=v.py?'+':''}${((v.fy-v.py)/v.py*100).toFixed(1)}%</span>` : '<span class="chg-flat">—</span>';
+        html += `<tr>
+          <td class="${multiCloud?'indent-2':'indent-1'}">${ou}</td>
+          <td class="num">${v.q1>0?FMT_FULL(v.q1):'—'}</td>
+          <td class="num">${v.q2>0?FMT_FULL(v.q2):'—'}</td>
+          <td class="num">${v.q3>0?FMT_FULL(v.q3):'—'}</td>
+          <td class="num">${v.q4>0?FMT_FULL(v.q4):'—'}</td>
+          <td class="num fw">${FMT_FULL(v.fy)}</td>
+          <td class="num">${v.py>0?FMT_FULL(v.py):'—'}</td>
+          <td class="num">${yoy}</td>
+        </tr>`;
+      });
+
+      if (multiCloud && ouKeys.length > 1) {
+        const cy2 = showYoY && cT.py > 0 ? `<span class="${cT.fy>=cT.py?'chg-pos':'chg-neg'}">${cT.fy>=cT.py?'+':''}${((cT.fy-cT.py)/cT.py*100).toFixed(1)}%</span>` : '<span class="chg-flat">—</span>';
+        html += `<tr class="cloud-subtotal">
+          <td class="indent-1">Total ${cloud}</td>
+          <td class="num">${FMT_FULL(cT.q1)}</td><td class="num">${FMT_FULL(cT.q2)}</td>
+          <td class="num">${FMT_FULL(cT.q3)}</td><td class="num">${FMT_FULL(cT.q4)}</td>
+          <td class="num fw">${FMT_FULL(cT.fy)}</td>
+          <td class="num">${cT.py>0?FMT_FULL(cT.py):'—'}</td><td class="num">${cy2}</td>
+        </tr>`;
+      }
+      bT.q1+=cT.q1; bT.q2+=cT.q2; bT.q3+=cT.q3; bT.q4+=cT.q4; bT.fy+=cT.fy; bT.py+=cT.py;
+    });
+
+    grandT.q1+=bT.q1; grandT.q2+=bT.q2; grandT.q3+=bT.q3; grandT.q4+=bT.q4; grandT.fy+=bT.fy; grandT.py+=bT.py;
+    const btY = showYoY && bT.py > 0 ? `<span class="${bT.fy>=bT.py?'chg-pos':'chg-neg'}">${bT.fy>=bT.py?'+':''}${((bT.fy-bT.py)/bT.py*100).toFixed(1)}%</span>` : '<span class="chg-flat">—</span>';
+    html += `<tr class="bucket-total">
+      <td>${bucket} Total</td>
+      <td class="num">${FMT_FULL(bT.q1)}</td><td class="num">${FMT_FULL(bT.q2)}</td>
+      <td class="num">${FMT_FULL(bT.q3)}</td><td class="num">${FMT_FULL(bT.q4)}</td>
+      <td class="num fw">${FMT_FULL(bT.fy)}</td>
+      <td class="num">${bT.py>0?FMT_FULL(bT.py):'—'}</td><td class="num">${btY}</td>
+    </tr>`;
   });
 
-  ['cloud','ou','bucket','cy','py','chg'].forEach(k => {
-    const el = document.getElementById('sort-' + k);
-    if (el) el.textContent = detailSortKey === k ? (detailSortDir === 1 ? ' ▲' : ' ▼') : '';
-  });
+  const gtY = showYoY && grandT.py > 0 ? `${grandT.fy>=grandT.py?'+':''}${((grandT.fy-grandT.py)/grandT.py*100).toFixed(1)}%` : '—';
+  html += `<tr class="grand-total-row">
+    <td>Grand Total</td>
+    <td class="num">${FMT_FULL(grandT.q1)}</td><td class="num">${FMT_FULL(grandT.q2)}</td>
+    <td class="num">${FMT_FULL(grandT.q3)}</td><td class="num">${FMT_FULL(grandT.q4)}</td>
+    <td class="num">${FMT_FULL(grandT.fy)}</td>
+    <td class="num">${grandT.py>0?FMT_FULL(grandT.py):'—'}</td><td class="num">${gtY}</td>
+  </tr>`;
 
-  const grandCy = rows.reduce((s,r) => s+r.cy, 0);
-  const grandPy = rows.reduce((s,r) => s+r.py, 0);
-
-  const tbody = rows.map(r => {
-    const chgText = r.chg === null ? '<span class="chg-flat">—</span>'
-      : `<span class="${r.chg >= 0 ? 'chg-pos' : 'chg-neg'}">${r.chg >= 0 ? '+' : ''}${r.chg.toFixed(1)}%</span>`;
-    return `<tr>
-      <td>${r.cloud || '—'}</td>
-      <td>${r.ou || '—'}</td>
-      <td>${r.bucket || '—'}</td>
-      <td class="num">${FMT_FULL(r.cy)}</td>
-      <td class="num">${r.py > 0 ? FMT_FULL(r.py) : '—'}</td>
-      <td class="num">${chgText}</td>
-    </tr>`;
-  }).join('');
-
-  const grandChg = grandPy > 0 ? ((grandCy-grandPy)/grandPy*100).toFixed(1) : null;
-  const grandChgText = grandChg === null ? '—'
-    : (parseFloat(grandChg) >= 0 ? '+' : '') + grandChg + '%';
-
-  document.getElementById('detailBody').innerHTML = tbody + `
-    <tr class="grand-total-row">
-      <td colspan="3"><strong>Grand Total</strong></td>
-      <td class="num">${FMT_FULL(grandCy)}</td>
-      <td class="num">${grandPy > 0 ? FMT_FULL(grandPy) : '—'}</td>
-      <td class="num">${grandChgText}</td>
-    </tr>`;
+  document.getElementById('detailBody').innerHTML = html;
 }
 
 function dlDetailTable() {
   const data = getFiltered(); const cy = activeYear, py = getCompareYear();
-  const rows = [['Cloud','OU','Bucket',cy.toUpperCase()+' Budget',py.toUpperCase()+' Budget','YoY Change %']];
-  data.forEach(d => {
-    const cyv=getVal(d,cy), pyv=getVal(d,py);
-    if (cyv===0 && pyv===0) return;
-    const chg = pyv>0?((cyv-pyv)/pyv*100).toFixed(1)+'%':'—';
-    rows.push([d.cloud,d.ou,d.bucket,cyv,pyv,chg]);
+  const rows = [['Bucket','Cloud','OU',cy.toUpperCase()+' Q1',cy.toUpperCase()+' Q2',cy.toUpperCase()+' Q3',cy.toUpperCase()+' Q4',cy.toUpperCase()+' FY',py.toUpperCase()+' FY','YoY %']];
+  const dataBuckets = [...new Set(data.map(d => d.bucket).filter(Boolean))];
+  [...BUCKET_ORDER.filter(b => dataBuckets.includes(b)), ...dataBuckets.filter(b=>!BUCKET_ORDER.includes(b))].forEach(bucket => {
+    data.filter(d=>d.bucket===bucket).forEach(d => {
+      const fy=d[cy]||0, fypy=d[py]||0;
+      if (fy===0&&fypy===0) return;
+      rows.push([bucket,d.cloud,d.ou,d[cy+'q1']||0,d[cy+'q2']||0,d[cy+'q3']||0,d[cy+'q4']||0,fy,fypy,fypy>0?((fy-fypy)/fypy*100).toFixed(1)+'%':'—']);
+    });
   });
-  downloadCSV(rows, 'detailed-budget');
+  downloadCSV(rows,'detailed-budget');
 }
 
-// ── Quarterly View (Tab 3) ──
-let qviewGroup = 'cloud';
+// ── Quarterly View (Tab 3) — pivot: Cloud rows × OU columns per bucket ──
+let qselActive = 'all';
 
-function setQViewGroup(group, btn) {
-  qviewGroup = group;
-  document.querySelectorAll('#qviewBucketToggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('qview-col-header').textContent = group.charAt(0).toUpperCase()+group.slice(1);
+function setQSel(q, el) {
+  qselActive = q;
+  document.querySelectorAll('.qsel-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
   updateQView();
 }
 
 function updateQView() {
   const data = getFiltered();
   const cy = activeYear;
-  const total = data.reduce((s,d) => s+(d[cy]||0), 0);
+  const qKey = qselActive === 'all' ? cy : cy + qselActive;
 
-  const groupMap = {};
-  data.forEach(d => {
-    const key = d[qviewGroup] || '—';
-    if (!groupMap[key]) groupMap[key] = {q1:0,q2:0,q3:0,q4:0,fy:0};
-    groupMap[key].q1 += d[cy+'q1']||0;
-    groupMap[key].q2 += d[cy+'q2']||0;
-    groupMap[key].q3 += d[cy+'q3']||0;
-    groupMap[key].q4 += d[cy+'q4']||0;
-    groupMap[key].fy += d[cy]||0;
-  });
+  const activeBuckets = BUCKET_ORDER.filter(b => data.some(d => d.bucket === b));
+  const content = document.getElementById('qviewContent');
+  if (!content) return;
 
-  const sorted = Object.entries(groupMap).sort((a,b) => b[1].fy - a[1].fy);
+  content.innerHTML = activeBuckets.map(bucket => {
+    const bData = data.filter(d => d.bucket === bucket);
+    if (!bData.length) return '';
 
-  const totals = {q1:0,q2:0,q3:0,q4:0,fy:0};
-  sorted.forEach(([,v]) => { totals.q1+=v.q1; totals.q2+=v.q2; totals.q3+=v.q3; totals.q4+=v.q4; totals.fy+=v.fy; });
+    const clouds = [...new Set(bData.map(d => d.cloud).filter(Boolean))].sort();
+    const allOUs = [...new Set(bData.map(d => d.ou).filter(Boolean))];
 
-  const rows = sorted.map(([name, v]) => {
-    const pct = total > 0 ? (v.fy/total*100).toFixed(1)+'%' : '—';
-    return `<tr>
-      <td>${name}</td>
-      <td class="qcell">${v.q1 > 0 ? FMT_FULL(v.q1) : '—'}</td>
-      <td class="qcell">${v.q2 > 0 ? FMT_FULL(v.q2) : '—'}</td>
-      <td class="qcell">${v.q3 > 0 ? FMT_FULL(v.q3) : '—'}</td>
-      <td class="qcell">${v.q4 > 0 ? FMT_FULL(v.q4) : '—'}</td>
-      <td class="num">${FMT_FULL(v.fy)}</td>
-      <td class="num">${pct}</td>
-    </tr>`;
+    // Sort OUs by total value for this key
+    const ouTots = {};
+    allOUs.forEach(o => ouTots[o] = bData.filter(d=>d.ou===o).reduce((s,d)=>s+(d[qKey]||0),0));
+    const sortedOUs = allOUs.sort((a,b)=>(ouTots[b]||0)-(ouTots[a]||0)).filter(o=>(ouTots[o]||0)>0);
+
+    const activeClouds = clouds.filter(c => bData.filter(d=>d.cloud===c).reduce((s,d)=>s+(d[qKey]||0),0)>0);
+    const grand = bData.reduce((s,d)=>s+(d[qKey]||0),0);
+
+    if (grand === 0) return `<div class="pivot-section">
+      <div class="pivot-title">${bucket}</div>
+      <div class="pivot-wrap" style="padding:16px;font-size:12px;color:#9B9B9B">No data for this quarter / filters</div>
+    </div>`;
+
+    const cellVal = (c,o) => bData.filter(d=>d.cloud===c&&d.ou===o).reduce((s,d)=>s+(d[qKey]||0),0);
+    const rowTot = (c) => bData.filter(d=>d.cloud===c).reduce((s,d)=>s+(d[qKey]||0),0);
+    const colTot = (o) => bData.filter(d=>d.ou===o).reduce((s,d)=>s+(d[qKey]||0),0);
+    const maxVal = Math.max(...activeClouds.map(rowTot), 1);
+
+    const ouCols = sortedOUs.length > 0 ? sortedOUs : allOUs.slice(0,12);
+
+    let thead = `<tr><th class="row-head">Cloud</th>`;
+    ouCols.forEach(o => thead += `<th>${o.length>11?o.substring(0,10)+'…':o}</th>`);
+    thead += `<th class="total-col">Total</th></tr>`;
+
+    const tbody = activeClouds.map(cloud => {
+      const rt = rowTot(cloud);
+      let row = `<tr><td class="row-head">${cloud}</td>`;
+      ouCols.forEach(ou => {
+        const v = cellVal(cloud, ou);
+        const ratio = v / maxVal;
+        const bg = v > 0 ? `rgba(1,118,211,${(0.06+ratio*0.65).toFixed(2)})` : 'transparent';
+        const fg = ratio > 0.5 ? '#fff' : (v > 0 ? '#032D60' : '#D0D0D0');
+        row += `<td style="background:${bg};color:${fg}">${v>0?FMT(v):'—'}</td>`;
+      });
+      row += `<td class="total-col">${FMT_FULL(rt)}</td></tr>`;
+      return row;
+    }).join('');
+
+    let totRow = `<tr class="pivot-total"><td class="row-head">Total</td>`;
+    ouCols.forEach(o => totRow += `<td class="total-col">${colTot(o)>0?FMT_FULL(colTot(o)):'—'}</td>`);
+    totRow += `<td class="total-col">${FMT_FULL(grand)}</td></tr>`;
+
+    return `<div class="pivot-section">
+      <div class="pivot-title">${bucket}</div>
+      <div class="pivot-wrap"><div style="overflow-x:auto">
+        <table class="pivot-table"><thead>${thead}</thead><tbody>${tbody}${totRow}</tbody></table>
+      </div></div>
+    </div>`;
   }).join('');
-
-  const totalPct = total > 0 ? '100%' : '—';
-  const totalRow = `<tr class="qview-total">
-    <td>Total</td>
-    <td class="qcell">${FMT_FULL(totals.q1)}</td>
-    <td class="qcell">${FMT_FULL(totals.q2)}</td>
-    <td class="qcell">${FMT_FULL(totals.q3)}</td>
-    <td class="qcell">${FMT_FULL(totals.q4)}</td>
-    <td class="num">${FMT_FULL(totals.fy)}</td>
-    <td class="num">${totalPct}</td>
-  </tr>`;
-
-  document.getElementById('qviewBody').innerHTML = rows + totalRow;
-
-  // Stakeholder grid placeholder
-  const ous = [...new Set(data.map(d => d.ou))].filter(Boolean).sort();
-  document.getElementById('stakeholderGrid').innerHTML = ous.map(ou => `
-    <div style="background:#F7F9FF;border:1px solid #E5E5E5;border-radius:6px;padding:10px 12px">
-      <div style="font-size:11px;font-weight:600;color:#032D60">${ou}</div>
-      <div style="font-size:11px;color:#9B9B9B;margin-top:3px">Owner: <em>TBC</em></div>
-    </div>`).join('');
 }
 
 function dlQView() {
   const data = getFiltered(); const cy = activeYear;
-  const groupMap = {};
-  data.forEach(d => {
-    const key = d[qviewGroup]||'—';
-    if (!groupMap[key]) groupMap[key]={q1:0,q2:0,q3:0,q4:0,fy:0};
-    groupMap[key].q1+=d[cy+'q1']||0; groupMap[key].q2+=d[cy+'q2']||0;
-    groupMap[key].q3+=d[cy+'q3']||0; groupMap[key].q4+=d[cy+'q4']||0;
-    groupMap[key].fy+=d[cy]||0;
-  });
-  const total = Object.values(groupMap).reduce((s,v)=>s+v.fy,0);
-  const label = qviewGroup.charAt(0).toUpperCase()+qviewGroup.slice(1);
-  const rows=[[label,'Q1','Q2','Q3','Q4','FY Total','% of Budget']];
-  Object.entries(groupMap).sort((a,b)=>b[1].fy-a[1].fy).forEach(([name,v])=>{
-    rows.push([name,v.q1,v.q2,v.q3,v.q4,v.fy,total>0?(v.fy/total*100).toFixed(1)+'%':'—']);
+  const qKey = qselActive === 'all' ? cy : cy + qselActive;
+  const rows = [['Bucket','Cloud','OU','Budget']];
+  BUCKET_ORDER.forEach(bucket => {
+    data.filter(d=>d.bucket===bucket).forEach(d => {
+      const v = d[qKey]||0;
+      if (v>0) rows.push([bucket,d.cloud,d.ou,v]);
+    });
   });
   downloadCSV(rows,'quarterly-view');
 }
