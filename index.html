@@ -157,6 +157,49 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 .dl-btn:hover{background:#E8F4FE}
 .dl-group{display:flex;gap:6px;align-items:center}
 
+/* ── Page tabs ── */
+.page-tabs{background:#fff;border-bottom:2px solid #E5E5E5;padding:0 32px;display:flex;gap:0}
+.page-tab{padding:14px 22px;font-size:13px;font-weight:500;color:#6B6B6B;cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.page-tab.active{color:#032D60;font-weight:600;border-bottom-color:#032D60}
+.page-tab:hover:not(.active){color:#181818;background:#F7F7F7}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── OU Summary ── */
+.ou-summary-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;margin-bottom:28px}
+.ou-summary-table{width:100%;border-collapse:collapse;font-size:12px}
+.ou-summary-table th{padding:9px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+.ou-summary-table th.num{text-align:right}
+.ou-summary-table td{padding:9px 16px;border-bottom:1px solid #F5F5F5;color:#181818;vertical-align:middle}
+.ou-summary-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.ou-summary-table tr:hover td{background:#F7F9FF}
+.ou-summary-table tr.total-row td{background:#F7F7F7!important;font-weight:700;color:#032D60;border-top:2px solid #E5E5E5}
+
+/* ── Detail table (Tab 2) ── */
+.detail-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;margin-bottom:24px}
+.detail-table{width:100%;border-collapse:collapse;font-size:12px}
+.detail-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap;cursor:pointer;user-select:none}
+.detail-table th:hover{background:#F0F0F0}
+.detail-table th.num{text-align:right}
+.detail-table td{padding:9px 16px;border-bottom:1px solid #F5F5F5;color:#181818;vertical-align:middle}
+.detail-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.detail-table tr:hover td{background:#F7F9FF}
+.detail-table tr.subtotal-row td{background:#F0F4F8;font-weight:600;color:#032D60;border-top:1px solid #E5E5E5}
+.detail-table tr.grand-total-row td{background:#032D60!important;color:#fff!important;font-weight:700}
+
+/* ── Quarterly view (Tab 3) ── */
+.qview-wrap{background:#fff;border:1px solid #E5E5E5;border-radius:8px;overflow:hidden;margin-bottom:24px}
+.qview-table{width:100%;border-collapse:collapse;font-size:12px}
+.qview-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;background:#F7F7F7;border-bottom:1px solid #E5E5E5;white-space:nowrap}
+.qview-table th.num{text-align:right}
+.qview-table th.qhdr{text-align:right;background:#E8F4FE;color:#0176D3}
+.qview-table td{padding:9px 16px;border-bottom:1px solid #F5F5F5;color:#181818}
+.qview-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+.qview-table td.qcell{text-align:right;font-variant-numeric:tabular-nums;color:#032D60}
+.qview-table tr:hover td{background:#F7F9FF}
+.qview-table tr.qview-total td{background:#F7F7F7!important;font-weight:700;color:#032D60;border-top:2px solid #E5E5E5}
+.stakeholder-tag{display:inline-block;background:#E8F4FE;color:#032D60;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:600;margin-left:6px;vertical-align:middle}
+
 /* ── Footer ── */
 .dash-footer{text-align:center;padding:24px 0 40px;font-size:11px;color:#BABABA}
 
@@ -254,7 +297,15 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   <a class="reset-link" onclick="resetAll()">Reset all</a>
 </div>
 
+<div class="page-tabs">
+  <button class="page-tab active" id="ptab-summary" onclick="switchPageTab('summary',this)">Summary</button>
+  <button class="page-tab" id="ptab-detail" onclick="switchPageTab('detail',this)">Detailed Budget</button>
+  <button class="page-tab" id="ptab-quarterly" onclick="switchPageTab('quarterly-view',this)">Quarterly View</button>
+</div>
+
 <main>
+
+<div class="tab-panel active" id="panel-summary">
 
   <!-- KPI Cards -->
   <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
@@ -298,12 +349,6 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
     </div>
   </div>
 
-  <!-- Insight strip -->
-  <div class="insight-strip">
-    <span class="insight-label">Auto Insights</span>
-    <div class="insight-pills" id="insightPills"></div>
-  </div>
-
   <!-- Cloud Summary -->
   <div class="section-header" style="margin-top:8px">
     <span class="section-title">Summary by Cloud</span>
@@ -311,6 +356,15 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   </div>
   <div class="cloud-summary-wrap">
     <table class="cloud-summary-table" id="cloudSummaryTable"></table>
+  </div>
+
+  <!-- OU Summary -->
+  <div class="section-header" style="margin-top:8px">
+    <span class="section-title">Summary by OU</span>
+    <button class="dl-btn" onclick="dlOUSummary()">↓ CSV</button>
+  </div>
+  <div class="ou-summary-wrap">
+    <table class="ou-summary-table" id="ouSummaryTable"></table>
   </div>
 
   <hr class="section-divider">
@@ -355,25 +409,6 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 
   <hr class="section-divider">
 
-  <!-- Regional Overview -->
-  <div class="section-header">
-    <span class="section-title">Regional Overview</span>
-    <div class="dl-group">
-      <button class="dl-btn" onclick="dlRegionalChart()">↓ PNG</button>
-      <button class="dl-btn" onclick="dlRegionalStats()">↓ CSV</button>
-    </div>
-  </div>
-  <div class="regional-grid">
-    <div class="regional-donut-wrap">
-      <div class="chart-inner-sm">
-        <canvas id="regionalChart"></canvas>
-      </div>
-    </div>
-    <div class="regional-stats" id="regionalStats"></div>
-  </div>
-
-  <hr class="section-divider">
-
   <!-- OU × Cloud Spend Matrix -->
   <div class="section-header">
     <span class="section-title">OU × Cloud Spend Matrix</span>
@@ -393,29 +428,6 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
 
   <hr class="section-divider">
 
-  <!-- Budget Concentration League Table -->
-  <div class="section-header">
-    <span class="section-title">Budget Concentration — Top 15 Combinations</span>
-    <button class="dl-btn" onclick="dlLeagueTable()">↓ CSV</button>
-  </div>
-  <div class="league-wrap">
-    <table class="league-table">
-      <thead>
-        <tr>
-          <th style="width:36px">#</th>
-          <th>Operating Unit</th>
-          <th>Cloud</th>
-          <th class="num">Budget</th>
-          <th class="num">% of Total</th>
-          <th class="bar-cell">Concentration</th>
-        </tr>
-      </thead>
-      <tbody id="leagueBody"></tbody>
-    </table>
-  </div>
-
-  <hr class="section-divider">
-
   <!-- Quarterly Distribution -->
   <div class="section-header">
     <span class="section-title">Quarterly Budget Distribution — Top OUs</span>
@@ -428,6 +440,92 @@ tbody td{padding:9px 14px;color:#181818;border-bottom:1px solid #F0F0F0}
   </div>
 
   <div class="dash-footer">Data as exported from Google Sheets &nbsp;·&nbsp; Media Finance &nbsp;·&nbsp; FY27</div>
+
+</div><!-- /panel-summary -->
+
+<!-- ── Tab 2: Detailed Budget ── -->
+<div class="tab-panel" id="panel-detail">
+  <div style="padding:24px 32px;max-width:1400px;margin:0 auto">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div style="font-size:18px;font-weight:700;color:#032D60;margin-bottom:4px">Detailed Budget</div>
+        <div style="font-size:12px;color:#6B6B6B">Full breakdown by Cloud, OU and Bucket — filtered by selections above</div>
+      </div>
+      <button class="dl-btn" style="font-size:12px;padding:6px 14px" onclick="dlDetailTable()">↓ Export CSV</button>
+    </div>
+
+    <div class="detail-wrap">
+      <div style="overflow-x:auto">
+        <table class="detail-table" id="detailTable">
+          <thead>
+            <tr>
+              <th onclick="sortDetail('cloud')">Cloud <span id="sort-cloud"></span></th>
+              <th onclick="sortDetail('ou')">OU <span id="sort-ou"></span></th>
+              <th onclick="sortDetail('bucket')">Bucket <span id="sort-bucket"></span></th>
+              <th class="num" onclick="sortDetail('cy')">FY27 Budget <span id="sort-cy"></span></th>
+              <th class="num" onclick="sortDetail('py')">FY26 Budget <span id="sort-py"></span></th>
+              <th class="num" onclick="sortDetail('chg')">YoY Change <span id="sort-chg"></span></th>
+            </tr>
+          </thead>
+          <tbody id="detailBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /panel-detail -->
+
+<!-- ── Tab 3: Quarterly View ── -->
+<div class="tab-panel" id="panel-quarterly-view">
+  <div style="padding:24px 32px;max-width:1400px;margin:0 auto">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div style="font-size:18px;font-weight:700;color:#032D60;margin-bottom:4px">Quarterly View</div>
+        <div style="font-size:12px;color:#6B6B6B">Budget by Cloud and OU across Q1–Q4 — use filters above to narrow down</div>
+      </div>
+      <button class="dl-btn" style="font-size:12px;padding:6px 14px" onclick="dlQView()">↓ Export CSV</button>
+    </div>
+
+    <!-- Bucket selector for Tab 3 -->
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:.08em;line-height:28px;margin-right:4px">View by</span>
+      <div class="year-toggle" id="qviewBucketToggle">
+        <button class="active" onclick="setQViewGroup('cloud',this)">Cloud</button>
+        <button onclick="setQViewGroup('ou',this)">OU</button>
+        <button onclick="setQViewGroup('bucket',this)">Bucket</button>
+      </div>
+    </div>
+
+    <div class="qview-wrap">
+      <div style="overflow-x:auto">
+        <table class="qview-table" id="qviewTable">
+          <thead>
+            <tr>
+              <th id="qview-col-header">Cloud</th>
+              <th class="qhdr">Q1</th>
+              <th class="qhdr">Q2</th>
+              <th class="qhdr">Q3</th>
+              <th class="qhdr">Q4</th>
+              <th class="num">FY Total</th>
+              <th class="num">% of Budget</th>
+            </tr>
+          </thead>
+          <tbody id="qviewBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Stakeholder ownership placeholder -->
+    <div style="background:#fff;border:1px solid #E5E5E5;border-radius:8px;padding:20px;margin-top:8px">
+      <div style="font-size:10px;font-weight:700;color:#9B9B9B;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Stakeholder Ownership</div>
+      <div style="font-size:12px;color:#6B6B6B;margin-bottom:14px">Budget owners by OU — placeholder until confirmed</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="stakeholderGrid"></div>
+    </div>
+
+  </div>
+</div><!-- /panel-quarterly-view -->
 
 </main>
 
@@ -994,14 +1092,14 @@ function updateTable() {
 
 function render() {
   updateKPIs();
-  updateInsights();
   updateCloudSummary();
+  updateOUSummary();
   updateChart();
-  updateRegional();
   updateMatrix();
-  updateLeagueTable();
   updateQuarterly();
   updateTable();
+  updateDetailTable();
+  updateQView();
 }
 
 // ── Filter setup ──
@@ -1266,6 +1364,251 @@ function dlKPIs() {
     ['Top Cloud',clT.length?clT[0][0]:'—'],['Top Cloud Budget',clT.length?clT[0][1]:'—'],
   ];
   downloadCSV(rows, 'kpi-summary');
+}
+
+// ── Page tab switch ──
+let activePage = 'summary';
+function switchPageTab(page, el) {
+  activePage = page;
+  document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + page).classList.add('active');
+}
+
+// ── OU Summary ──
+function updateOUSummary() {
+  const data = getFiltered();
+  const cy = activeYear, py = getCompareYear();
+  const showYoY = hasQuarterlyPrior();
+  const total = data.reduce((s,d) => s+getVal(d,cy), 0);
+
+  const ouMap = {};
+  data.forEach(d => {
+    if (!d.ou || d.ou === 'All') return;
+    if (!ouMap[d.ou]) ouMap[d.ou] = {cy:0, py:0};
+    ouMap[d.ou].cy += getVal(d, cy);
+    ouMap[d.ou].py += showYoY ? getVal(d, py) : 0;
+  });
+
+  const sorted = Object.entries(ouMap).sort((a,b) => b[1].cy - a[1].cy);
+
+  const qLabel = activeQuarter === 'all' ? cy.toUpperCase() : cy.toUpperCase() + ' ' + activeQuarter.toUpperCase();
+  const pyLabel = showYoY ? (activeQuarter === 'all' ? py.toUpperCase() : py.toUpperCase() + ' ' + activeQuarter.toUpperCase()) : null;
+
+  let html = `<thead><tr>
+    <th>Operating Unit</th>
+    <th class="num">${qLabel} Budget</th>
+    <th class="num">% of Total</th>
+    ${showYoY ? `<th class="num">${pyLabel}</th><th class="num">YoY Change</th>` : ''}
+  </tr></thead><tbody>`;
+
+  sorted.forEach(([ou, vals]) => {
+    const pct = PCT(vals.cy, total);
+    const yoy = showYoY && vals.py > 0
+      ? `<span class="${vals.cy >= vals.py ? 'chg-pos' : 'chg-neg'}">${vals.cy >= vals.py ? '+' : ''}${((vals.cy-vals.py)/vals.py*100).toFixed(1)}%</span>`
+      : '<span class="chg-flat">—</span>';
+    html += `<tr>
+      <td><strong>${ou}</strong></td>
+      <td class="num">${FMT_FULL(vals.cy)}</td>
+      <td class="num">${pct}</td>
+      ${showYoY ? `<td class="num">${FMT_FULL(vals.py)}</td><td class="num">${yoy}</td>` : ''}
+    </tr>`;
+  });
+
+  const totalPy = sorted.reduce((s,[,v]) => s+v.py, 0);
+  const totalYoy = showYoY && totalPy > 0
+    ? `<span class="${total >= totalPy ? 'chg-pos' : 'chg-neg'}">${total >= totalPy ? '+' : ''}${((total-totalPy)/totalPy*100).toFixed(1)}%</span>`
+    : '<span class="chg-flat">—</span>';
+  html += `<tr class="total-row">
+    <td>Total</td>
+    <td class="num">${FMT_FULL(total)}</td>
+    <td class="num">100%</td>
+    ${showYoY ? `<td class="num">${FMT_FULL(totalPy)}</td><td class="num">${totalYoy}</td>` : ''}
+  </tr>`;
+
+  html += '</tbody>';
+  document.getElementById('ouSummaryTable').innerHTML = html;
+}
+
+function dlOUSummary() {
+  const data = getFiltered(); const cy = activeYear, py = getCompareYear();
+  const showYoY = hasQuarterlyPrior();
+  const total = data.reduce((s,d) => s+getVal(d,cy), 0);
+  const ouMap = {};
+  data.forEach(d => {
+    if (!d.ou||d.ou==='All') return;
+    if (!ouMap[d.ou]) ouMap[d.ou]={cy:0,py:0};
+    ouMap[d.ou].cy+=getVal(d,cy);
+    ouMap[d.ou].py+=showYoY?getVal(d,py):0;
+  });
+  const headers = ['Operating Unit', cy.toUpperCase()+' Budget', '% of Total'];
+  if (showYoY) headers.push(py.toUpperCase(), 'YoY Change %');
+  const rows = [headers];
+  Object.entries(ouMap).sort((a,b)=>b[1].cy-a[1].cy).forEach(([ou,vals]) => {
+    const row = [ou, vals.cy, total>0?(vals.cy/total*100).toFixed(1)+'%':'—'];
+    if (showYoY) row.push(vals.py, vals.py>0?((vals.cy-vals.py)/vals.py*100).toFixed(1)+'%':'—');
+    rows.push(row);
+  });
+  downloadCSV(rows, 'ou-summary');
+}
+
+// ── Detail Table (Tab 2) ──
+let detailSortKey = 'cy', detailSortDir = -1;
+
+function sortDetail(key) {
+  if (detailSortKey === key) detailSortDir *= -1;
+  else { detailSortKey = key; detailSortDir = -1; }
+  updateDetailTable();
+}
+
+function updateDetailTable() {
+  const data = getFiltered();
+  const cy = activeYear, py = getCompareYear();
+
+  const rows = data.map(d => {
+    const cyv = getVal(d, cy), pyv = getVal(d, py);
+    const chg = pyv > 0 ? (cyv - pyv) / pyv * 100 : null;
+    return { cloud: d.cloud, ou: d.ou, bucket: d.bucket, cy: cyv, py: pyv, chg };
+  }).filter(r => r.cy > 0 || r.py > 0);
+
+  rows.sort((a,b) => {
+    const av = a[detailSortKey] ?? -Infinity;
+    const bv = b[detailSortKey] ?? -Infinity;
+    if (typeof av === 'string') return detailSortDir * av.localeCompare(bv);
+    return detailSortDir * (av - bv);
+  });
+
+  ['cloud','ou','bucket','cy','py','chg'].forEach(k => {
+    const el = document.getElementById('sort-' + k);
+    if (el) el.textContent = detailSortKey === k ? (detailSortDir === 1 ? ' ▲' : ' ▼') : '';
+  });
+
+  const grandCy = rows.reduce((s,r) => s+r.cy, 0);
+  const grandPy = rows.reduce((s,r) => s+r.py, 0);
+
+  const tbody = rows.map(r => {
+    const chgText = r.chg === null ? '<span class="chg-flat">—</span>'
+      : `<span class="${r.chg >= 0 ? 'chg-pos' : 'chg-neg'}">${r.chg >= 0 ? '+' : ''}${r.chg.toFixed(1)}%</span>`;
+    return `<tr>
+      <td>${r.cloud || '—'}</td>
+      <td>${r.ou || '—'}</td>
+      <td>${r.bucket || '—'}</td>
+      <td class="num">${FMT_FULL(r.cy)}</td>
+      <td class="num">${r.py > 0 ? FMT_FULL(r.py) : '—'}</td>
+      <td class="num">${chgText}</td>
+    </tr>`;
+  }).join('');
+
+  const grandChg = grandPy > 0 ? ((grandCy-grandPy)/grandPy*100).toFixed(1) : null;
+  const grandChgText = grandChg === null ? '—'
+    : (parseFloat(grandChg) >= 0 ? '+' : '') + grandChg + '%';
+
+  document.getElementById('detailBody').innerHTML = tbody + `
+    <tr class="grand-total-row">
+      <td colspan="3"><strong>Grand Total</strong></td>
+      <td class="num">${FMT_FULL(grandCy)}</td>
+      <td class="num">${grandPy > 0 ? FMT_FULL(grandPy) : '—'}</td>
+      <td class="num">${grandChgText}</td>
+    </tr>`;
+}
+
+function dlDetailTable() {
+  const data = getFiltered(); const cy = activeYear, py = getCompareYear();
+  const rows = [['Cloud','OU','Bucket',cy.toUpperCase()+' Budget',py.toUpperCase()+' Budget','YoY Change %']];
+  data.forEach(d => {
+    const cyv=getVal(d,cy), pyv=getVal(d,py);
+    if (cyv===0 && pyv===0) return;
+    const chg = pyv>0?((cyv-pyv)/pyv*100).toFixed(1)+'%':'—';
+    rows.push([d.cloud,d.ou,d.bucket,cyv,pyv,chg]);
+  });
+  downloadCSV(rows, 'detailed-budget');
+}
+
+// ── Quarterly View (Tab 3) ──
+let qviewGroup = 'cloud';
+
+function setQViewGroup(group, btn) {
+  qviewGroup = group;
+  document.querySelectorAll('#qviewBucketToggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('qview-col-header').textContent = group.charAt(0).toUpperCase()+group.slice(1);
+  updateQView();
+}
+
+function updateQView() {
+  const data = getFiltered();
+  const cy = activeYear;
+  const total = data.reduce((s,d) => s+(d[cy]||0), 0);
+
+  const groupMap = {};
+  data.forEach(d => {
+    const key = d[qviewGroup] || '—';
+    if (!groupMap[key]) groupMap[key] = {q1:0,q2:0,q3:0,q4:0,fy:0};
+    groupMap[key].q1 += d[cy+'q1']||0;
+    groupMap[key].q2 += d[cy+'q2']||0;
+    groupMap[key].q3 += d[cy+'q3']||0;
+    groupMap[key].q4 += d[cy+'q4']||0;
+    groupMap[key].fy += d[cy]||0;
+  });
+
+  const sorted = Object.entries(groupMap).sort((a,b) => b[1].fy - a[1].fy);
+
+  const totals = {q1:0,q2:0,q3:0,q4:0,fy:0};
+  sorted.forEach(([,v]) => { totals.q1+=v.q1; totals.q2+=v.q2; totals.q3+=v.q3; totals.q4+=v.q4; totals.fy+=v.fy; });
+
+  const rows = sorted.map(([name, v]) => {
+    const pct = total > 0 ? (v.fy/total*100).toFixed(1)+'%' : '—';
+    return `<tr>
+      <td>${name}</td>
+      <td class="qcell">${v.q1 > 0 ? FMT_FULL(v.q1) : '—'}</td>
+      <td class="qcell">${v.q2 > 0 ? FMT_FULL(v.q2) : '—'}</td>
+      <td class="qcell">${v.q3 > 0 ? FMT_FULL(v.q3) : '—'}</td>
+      <td class="qcell">${v.q4 > 0 ? FMT_FULL(v.q4) : '—'}</td>
+      <td class="num">${FMT_FULL(v.fy)}</td>
+      <td class="num">${pct}</td>
+    </tr>`;
+  }).join('');
+
+  const totalPct = total > 0 ? '100%' : '—';
+  const totalRow = `<tr class="qview-total">
+    <td>Total</td>
+    <td class="qcell">${FMT_FULL(totals.q1)}</td>
+    <td class="qcell">${FMT_FULL(totals.q2)}</td>
+    <td class="qcell">${FMT_FULL(totals.q3)}</td>
+    <td class="qcell">${FMT_FULL(totals.q4)}</td>
+    <td class="num">${FMT_FULL(totals.fy)}</td>
+    <td class="num">${totalPct}</td>
+  </tr>`;
+
+  document.getElementById('qviewBody').innerHTML = rows + totalRow;
+
+  // Stakeholder grid placeholder
+  const ous = [...new Set(data.map(d => d.ou))].filter(Boolean).sort();
+  document.getElementById('stakeholderGrid').innerHTML = ous.map(ou => `
+    <div style="background:#F7F9FF;border:1px solid #E5E5E5;border-radius:6px;padding:10px 12px">
+      <div style="font-size:11px;font-weight:600;color:#032D60">${ou}</div>
+      <div style="font-size:11px;color:#9B9B9B;margin-top:3px">Owner: <em>TBC</em></div>
+    </div>`).join('');
+}
+
+function dlQView() {
+  const data = getFiltered(); const cy = activeYear;
+  const groupMap = {};
+  data.forEach(d => {
+    const key = d[qviewGroup]||'—';
+    if (!groupMap[key]) groupMap[key]={q1:0,q2:0,q3:0,q4:0,fy:0};
+    groupMap[key].q1+=d[cy+'q1']||0; groupMap[key].q2+=d[cy+'q2']||0;
+    groupMap[key].q3+=d[cy+'q3']||0; groupMap[key].q4+=d[cy+'q4']||0;
+    groupMap[key].fy+=d[cy]||0;
+  });
+  const total = Object.values(groupMap).reduce((s,v)=>s+v.fy,0);
+  const label = qviewGroup.charAt(0).toUpperCase()+qviewGroup.slice(1);
+  const rows=[[label,'Q1','Q2','Q3','Q4','FY Total','% of Budget']];
+  Object.entries(groupMap).sort((a,b)=>b[1].fy-a[1].fy).forEach(([name,v])=>{
+    rows.push([name,v.q1,v.q2,v.q3,v.q4,v.fy,total>0?(v.fy/total*100).toFixed(1)+'%':'—']);
+  });
+  downloadCSV(rows,'quarterly-view');
 }
 
 // ── Init ──
